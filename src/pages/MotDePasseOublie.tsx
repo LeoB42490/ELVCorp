@@ -1,7 +1,26 @@
 import { Link, useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import { forgotPassword } from "../api";
 
 function MotDePasseOublie() {
     const navigate = useNavigate();
+    const [email, setEmail] = useState("");
+    const [message, setMessage] = useState("");
+    const [error, setError] = useState("");
+
+    async function handleSubmit(e: React.FormEvent) {
+        e.preventDefault();
+        setMessage("");
+        setError("");
+
+        const data = await forgotPassword({email});
+        if (data.message) {
+            setMessage(data.message);
+        } else {
+            setError("Erreur lors de la demande de réinitialisation du mot de passe")
+        }
+    }
+
     return(
         <>
             <nav className="bg-white shadow-sm sticky top-0 z-50">
@@ -63,7 +82,7 @@ function MotDePasseOublie() {
                 </div>
 
                 {/* <!-- Reset Form --> */}
-                <form className="space-y-6">
+                <form className="space-y-6" onSubmit={handleSubmit}>
                     {/* <!-- Email --> */}
                     <div>
                         <label htmlFor="email" className="block text-sm font-medium text-gray-900 mb-2">
@@ -73,13 +92,21 @@ function MotDePasseOublie() {
                             type="email"
                             id="email"
                             placeholder="vous@example.com"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
                             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition"
                             required
                         />
                     </div>
 
+                    {message && <p className="text-green-600">{message}</p>}
+                    {error && <p className="text-red-600">{error}</p>}
+
                     {/* <!-- Submit Button --> */}
-                    <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition block text-center" onClick={() => navigate("/login")}>
+                    <button 
+                    type="submit"
+                    className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition block text-center" 
+                    >
                         Envoyer le lien de réinitialisation
                     </button>
                 </form>

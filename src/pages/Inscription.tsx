@@ -1,7 +1,46 @@
+import React, { useState } from 'react';
 import { useNavigate, Link } from "react-router-dom";
+import { registerUser } from '../api';
 
 function Inscription() {
     const navigate = useNavigate();
+    const [nom, setNom] = useState("");
+    const [prenom, setPrenom] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
+    const [error, setError] = useState("");
+
+    async function handleRegister(e: React.FormEvent) {
+        e.preventDefault();
+        setError("");
+
+        if (password !== confirmPassword) {
+            setError("Les mots de passe ne correspondent pas");
+            return;
+        }
+
+        const data = await registerUser({
+            nom,
+            prenom,
+            email,
+            password,
+        });
+
+        if (data.token) {
+            localStorage.setItem("token", data.token);
+            window.location.href = "/";
+        } else if (data.errors) {
+            const errors = data.errors as Record<string, string[]>;
+            const errorsArray = Object.values(errors);
+            if (errorsArray.length > 0 && errorsArray[0].length > 0) {
+                setError(errorsArray[0][0]);
+            }
+        } else {
+            setError(data.message || "Erreur lors de la connexion");
+        }
+    }
+
     return (
         <>
         {/* <!-- Navigation --> */}
@@ -59,7 +98,7 @@ function Inscription() {
             </div>
 
             {/* <!-- Register Form --> */}
-            <form className="space-y-5">
+            <form className="space-y-5" onSubmit={handleRegister}>
                 {/* <!-- Prénom --> */}
                 <div>
                     <label htmlFor="firstname" className="block text-sm font-medium text-gray-900 mb-2">
@@ -69,6 +108,8 @@ function Inscription() {
                         type="text"
                         id="firstname"
                         placeholder="Jean"
+                        value={prenom}
+                        onChange={(e) => setPrenom(e.target.value)}
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition"
                         required
                     />
@@ -83,6 +124,8 @@ function Inscription() {
                         type="text"
                         id="lastname"
                         placeholder="Dupont"
+                        value={nom}
+                        onChange={(e) => setNom(e.target.value)}
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition"
                         required
                     />
@@ -97,6 +140,8 @@ function Inscription() {
                         type="email"
                         id="email"
                         placeholder="vous@example.com"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition"
                         required
                     />
@@ -111,10 +156,12 @@ function Inscription() {
                         type="password"
                         id="password"
                         placeholder="••••••••"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition"
                         required
                     />
-                    <p className="text-xs text-gray-500 mt-1">Au minimum 8 caractères</p>
+                    <p className="text-xs text-gray-500 mt-1">Au minimum 6 caractères</p>
                 </div>
 
                 {/* <!-- Confirm Password --> */}
@@ -126,12 +173,22 @@ function Inscription() {
                         type="password"
                         id="confirm-password"
                         placeholder="••••••••"
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition"
                         required
                     />
                 </div>
 
-                <button className="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-3 rounded-lg transition mt-6 block text-center" onClick={() => navigate("/")}>
+                {error && (
+                    <p className="text-red-600 text-sm text-center">
+                        {error}
+                    </p>
+                )}
+
+                <button 
+                    type="submit"
+                    className="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-3 rounded-lg transition mt-6 block text-center">
                     Créer mon compte
                 </button>
             </form>

@@ -3,6 +3,7 @@ import Home from "./pages/Home";
 import Connexion from "./pages/Connexion";
 import Inscription from "./pages/Inscription";
 import MotDePasseOublie from "./pages/MotDePasseOublie";
+import ResetPassword from "./pages/ResetPassword";
 
 function App() {
     return (
@@ -12,6 +13,7 @@ function App() {
                 <Route path="/login" element={<Connexion />} />
                 <Route path="/register" element={<Inscription />} />
                 <Route path="/mot-de-passe-oublie" element={<MotDePasseOublie />} />
+                <Route path="/reset-password" element={<ResetPassword/>} />
             </Routes>
         </BrowserRouter>
     );

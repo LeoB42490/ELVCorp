@@ -1,7 +1,31 @@
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom'
+import { loginUser } from '../api';
 
 function Connexion() {
     const navigate = useNavigate();
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [error, setError] = useState("");
+
+    async function handleLogin(e: React.FormEvent) {
+        e.preventDefault();
+        setError("");
+
+        const data = await loginUser({
+            email,
+            password
+        });
+        console.log(data);
+
+        if (data.token) {
+            localStorage.setItem("token", data.token);
+            navigate("/");
+        } else {
+            setError(data.message || "Erreur lors de la connexion");
+        }
+    }
+
     return (
         <>
         <nav className="bg-white shadow-sm sticky top-0 z-50">
@@ -58,7 +82,7 @@ function Connexion() {
             </div>
 
             {/* <!-- Login Form --> */}
-            <form className="space-y-6">
+            <form className="space-y-6" onSubmit={handleLogin}>
                 {/* <!-- Email --> */}
                 <div>
                     <label htmlFor="email" className="block text-sm font-medium text-gray-900 mb-2">
@@ -68,6 +92,8 @@ function Connexion() {
                         type="email"
                         id="email"
                         placeholder="vous@example.com"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition"
                         required
                     />
@@ -82,6 +108,8 @@ function Connexion() {
                         type="password"
                         id="password"
                         placeholder="••••••••"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition"
                         required
                     />
@@ -93,13 +121,22 @@ function Connexion() {
                         <input type="checkbox" className="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-600" />
                         <span className="text-sm text-gray-600">Se souvenir de moi</span>
                     </label>
-                    <button className="text-sm text-blue-600 hover:text-blue-700 transition" onClick={() => navigate("/mot-de-passe-oublie")}>
+                    <button 
+                    type="button"
+                    className="text-sm text-blue-600 hover:text-blue-700 transition" onClick={() => navigate("/mot-de-passe-oublie")}>
                         Mot de passe oublié?
                     </button>
                 </div>
-
+                {error && (
+                    <p className="text-red-600 text-sm text-center">
+                        {error}
+                    </p>
+                )}
                 {/* <!-- Login Button --> */}
-                <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition block text-center" onClick={() => navigate("/")}>
+                <button 
+                    type="submit"
+                    className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition block text-center"
+                >
                     Se connecter
                 </button>
             </form>
