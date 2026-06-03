@@ -1,76 +1,55 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { loginUser } from '../api';
+import Navbar from "../components/Navbar";
 
 function Connexion() {
     const navigate = useNavigate();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
+    const [success, setSuccess] = useState("");
+    const [loading, setLoading] = useState(false);
 
     async function handleLogin(e: React.FormEvent) {
         e.preventDefault();
         setError("");
+        setSuccess("");
 
-        const data = await loginUser({
-            email,
-            password
-        });
-        console.log(data);
+        if (!email || !password) {
+            setError("Veuillez remplir tous les champs.");
+            return;
+        }
 
-        if (data.token) {
+        if (password.length < 6) {
+            setError("Le mot de passe doit contenir au moins 6 caractères.");
+            return;
+        }
+
+        try {
+            setLoading(true);
+            const data = await loginUser({
+                email,
+                password
+            });
+            console.log(data);
+            if (data.token) {
             localStorage.setItem("token", data.token);
             navigate("/");
-        } else {
-            setError(data.message || "Erreur lors de la connexion");
-        }
+            } else {
+                setError(data.message || "Erreur lors de la connexion");
+            }
+        } catch (err) {
+            console.log(err);
+            setError("Impossible de contacter le serveur.");
+        } finally {
+            setLoading(false);
+        }     
     }
 
     return (
         <>
-        <nav className="bg-white shadow-sm sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between items-center h-16">
-                {/* <!-- Logo --> */}
-                <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 bg-blue-600 rounded flex items-center justify-center">
-                        <span className="text-white font-bold text-lg">⚡</span>
-                    </div>
-                    <button className="text-xl font-bold text-blue-600" onClick={() => navigate("/")}>HostBuster</button>
-                </div>
-
-                {/* <!-- Menu Desktop --> */}
-                <div className="hidden md:flex gap-8 items-center">
-                    <Link to="/" className="text-gray-700 hover:text-blue-600 transition">
-                      Accueil
-                    </Link>
-                    <Link to="/#offres" className="text-gray-700 hover:text-blue-600 transition">
-                      Offres
-                    </Link>
-                    <Link to="/support" className="text-gray-700 hover:text-blue-600 transition">
-                      Support
-                    </Link>
-                </div>
-
-                {/* <!-- Boutons --> */}
-                <div className="hidden md:flex gap-3">
-                    <button className="text-gray-700 px-4 py-2 hover:text-blue-600 transition" onClick={() => navigate("/login")}>
-                        Connexion
-                    </button>
-                    <button className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition" onClick={() => navigate("/register")}> 
-                        Créer son compte
-                    </button>
-                </div>
-
-                {/* <!-- Menu Mobile --> */}
-                <button className="md:hidden text-gray-700">
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                    </svg>
-                </button>
-            </div>
-        </div>
-    </nav>
+            <Navbar />
 
     {/* <!-- Main Content --> */}
     <section className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
@@ -132,13 +111,20 @@ function Connexion() {
                         {error}
                     </p>
                 )}
+
+                {success && (
+                    <p className="text-green-600 text-sm text-center">
+                        {success}
+                    </p>
+                )}
                 {/* <!-- Login Button --> */}
                 <button 
                     type="submit"
+                    disabled={loading}
                     className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition block text-center"
                 >
-                    Se connecter
-                </button>
+                    {loading ? "Connexion..." : "Se connecter"}
+                </button> {/* TODO Mettre vérification password avant bouton Se connecter et dire sibon password ou non */}
             </form>
             {/* <!-- Register Link --> */}
             <div className="text-center mt-8 pt-8 border-t border-gray-200">

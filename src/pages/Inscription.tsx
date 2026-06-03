@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { registerUser } from '../api';
-
+import Navbar from "../components/Navbar";
 function Inscription() {
     const navigate = useNavigate();
     const [nom, setNom] = useState("");
@@ -42,51 +42,10 @@ function Inscription() {
     }
 
     return (
-        <>
-        {/* <!-- Navigation --> */}
-    <nav className="bg-white shadow-sm sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between items-center h-16">
-                {/* <!-- Logo --> */}
-                <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 bg-blue-600 rounded flex items-center justify-center">
-                        <span className="text-white font-bold text-lg">⚡</span>
-                    </div>
-                    <button className="text-xl font-bold text-blue-600" onClick={() => navigate("/")}>HostBuster</button>
-                </div>
+    <>
+    {/* <!-- Navigation --> */}
 
-                {/* <!-- Menu Desktop --> */}
-                <div className="hidden md:flex gap-8 items-center">
-                    <Link to="/" className="text-gray-700 hover:text-blue-600 transition">
-                      Accueil
-                    </Link>
-                    <Link to="/#offres" className="text-gray-700 hover:text-blue-600 transition">
-                      Offres
-                    </Link>
-                    <Link to="/support" className="text-gray-700 hover:text-blue-600 transition">
-                      Support
-                    </Link>
-                </div>
-
-                {/* <!-- Boutons --> */}
-                <div className="hidden md:flex gap-3">
-                    <button className="text-gray-700 px-4 py-2 hover:text-blue-600 transition" onClick={() => navigate("/login")}>
-                        Connexion
-                    </button>
-                    <button className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition" onClick={() => navigate("/register")}>
-                        Créer son compte
-                    </button>
-                </div>
-
-                {/* <!-- Menu Mobile --> */}
-                <button className="md:hidden text-gray-700">
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                    </svg>
-                </button>
-            </div>
-        </div>
-    </nav>
+    <Navbar />
 
     {/* <!-- Main Content --> */}
     <section className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">

@@ -3,7 +3,7 @@ import glpiImage from '../assets/glpi.png'
 import odooImage from '../assets/odoo.png'
 import wordpressImage from '../assets/wordpress.png'
 import reseauImage from '../assets/reseau.png'
-
+import Navbar from "../components/Navbar";
 import { Link, useNavigate } from 'react-router-dom'
 
 function Home() {
@@ -12,50 +12,7 @@ function Home() {
     <>
     <div className="Principal">
 
-    
-    <nav className="bg-white shadow-sm sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between items-center h-16">
-                {/* <!-- Logo --> */}
-                <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 bg-blue-600 rounded flex items-center justify-center">
-                        <span className="text-white font-bold text-lg">⚡</span>
-                    </div>
-                    <span className="text-xl font-bold text-blue-600">HostBuster</span>
-                </div>
-
-                {/* <!-- Menu Desktop --> */}
-                <div className="hidden md:flex gap-8 items-center">
-                    <Link to="/" className="text-gray-700 hover:text-blue-600 transition">
-                      Accueil
-                    </Link>
-                    <Link to="/#offres" className="text-gray-700 hover:text-blue-600 transition">
-                      Offres
-                    </Link>
-                    <Link to="/support" className="text-gray-700 hover:text-blue-600 transition">
-                      Support
-                    </Link>
-                </div>
-
-                {/* <!-- Boutons --> */}
-                <div className="hidden md:flex gap-3">
-                    <button className="text-gray-700 px-4 py-2 hover:text-blue-600 transition" onClick={() => navigate("/login")}>
-                      Connexion
-                    </button>
-                    <button className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition" onClick={() => navigate("/register")}>
-                        Créer un compte
-                    </button>
-                </div>
-
-                {/* <!-- Menu Mobile --> */}
-                <button className="md:hidden text-gray-700">
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                    </svg>
-                </button>
-            </div>  
-        </div>
-    </nav>
+    <Navbar />
 
     {/* <!-- Hero Section --> */}
     <section className="bg-gradient-to-r from-blue-50 to-blue-100 py-12 md:py-20">
@@ -144,8 +101,8 @@ function Home() {
                                 <span className="text-green-500">✓</span> Sécurité renforcée
                             </li>
                         </ul>
-                        <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg transition">
-                            À partir 8,99€/mois
+                        <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg transition" onClick={() => navigate("/offers/4")}>
+                            À partir 4,99€/mois
                         </button>
                     </div>
                 </div>
@@ -168,8 +125,8 @@ function Home() {
                                 <span className="text-green-500">✓</span> Suivi en temps réel
                             </li>
                         </ul>
-                        <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg transition">
-                            À partir 11,99€/mois
+                        <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg transition" onClick={() => navigate("/offers/2")}>
+                            À partir 4,99€/mois
                         </button>
                     </div>
                 </div>
@@ -179,7 +136,7 @@ function Home() {
                     <div className="bg-gradient-to-br from-green-100 to-green-200 h-40 flex items-center justify-center">
                         <div className="text-center">
                             <img src={glpiImage} alt="GLPI" className="h-20 mb-2"/>
-                            <p className="font-bold text-gray-700">GLPi</p>
+                            <p className="font-bold text-gray-700">GLPI</p>
                         </div>
                     </div>
                     <div className="p-6">
@@ -192,8 +149,8 @@ function Home() {
                                 <span className="text-green-500">✓</span> Support helpdesk
                             </li>
                         </ul>
-                        <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg transition">
-                            À partir 11,99€/mois
+                        <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg transition" onClick={() => navigate("/offers/3")}>
+                            À partir 4,99€/mois
                         </button>
                     </div>
                 </div>
@@ -216,8 +173,8 @@ function Home() {
                                 <span className="text-green-500">✓</span> Supervision continue
                             </li>
                         </ul>
-                        <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg transition">
-                            À partir 8,99€/mois
+                        <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg transition" onClick={() => navigate("/offers/1")}>
+                            À partir 9,99€/mois
                         </button>
                     </div>
                 </div>

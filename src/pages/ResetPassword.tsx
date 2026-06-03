@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { resetPassword } from "../api";
+import Navbar from "../components/Navbar";
 
 function ResetPassword() {
     const navigate = useNavigate();
@@ -45,50 +46,7 @@ function ResetPassword() {
 
     return (
         <>
-            <nav className="bg-white shadow-sm sticky top-0 z-50">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="flex justify-between items-center h-16">
-                        <div className="flex items-center gap-2">
-                            <div className="w-8 h-8 bg-blue-600 rounded flex items-center justify-center">
-                                <span className="text-white font-bold text-lg">⚡</span>
-                            </div>
-                            <button
-                                className="text-xl font-bold text-blue-600"
-                                onClick={() => navigate("/")}
-                            >
-                                HostBuster
-                            </button>
-                        </div>
-
-                        <div className="hidden md:flex gap-8 items-center">
-                            <Link to="/" className="text-gray-700 hover:text-blue-600 transition">
-                                Accueil
-                            </Link>
-                            <Link to="/#offres" className="text-gray-700 hover:text-blue-600 transition">
-                                Offres
-                            </Link>
-                            <Link to="/support" className="text-gray-700 hover:text-blue-600 transition">
-                                Support
-                            </Link>
-                        </div>
-
-                        <div className="hidden md:flex gap-3">
-                            <button
-                                className="text-gray-700 px-4 py-2 hover:text-blue-600 transition"
-                                onClick={() => navigate("/login")}
-                            >
-                                Connexion
-                            </button>
-                            <button
-                                className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition"
-                                onClick={() => navigate("/register")}
-                            >
-                                Créer un compte
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </nav>
+            <Navbar />
 
             <section className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
                 <div className="w-full max-w-md bg-white rounded-xl shadow-lg p-8">
