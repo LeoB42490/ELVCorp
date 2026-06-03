@@ -35,5 +35,5 @@ nvm alias deault 22
 - Faire la page 'Support' et la page 'Contact'
 - Sur la page d'accueil
   - Si authentifié, enlever le bouton "Connexion" et mettre à la place "Voir le profil"
-  - Lors de l'appuie sur "Offres" dans la navbar, descendre sur les offres
+  - Lors de l'appuie sur "Offres" dans la navbar, descendre sur les offres ✅
   - Sur la section "Nos offres", mettre en place les quatres boutons 

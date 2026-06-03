@@ -4,10 +4,28 @@ import odooImage from '../assets/odoo.png'
 import wordpressImage from '../assets/wordpress.png'
 import reseauImage from '../assets/reseau.png'
 import Navbar from "../components/Navbar";
-import { Link, useNavigate } from 'react-router-dom'
+import { useEffect } from 'react'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 
 function Home() {
     const navigate = useNavigate();
+    const scrollToApplication = () => {
+        document.getElementById("applications")?.scrollIntoView({ behavior: "smooth"});
+    };
+    const location = useLocation();
+    useEffect(() => {
+        if (location.hash) {
+            const element = document.getElementById(
+                location.hash.replace("#", "")
+            );
+            if (element) {
+                element.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start",
+                });
+            }
+        }
+    }, [location]);
   return (
     <>
     <div className="Principal">
@@ -58,12 +76,12 @@ function Home() {
         <div className="bg-white rounded-lg shadow-md p-8 mb-12">
             <h3 className="text-2xl font-bold text-gray-800 mb-8">📋 Nos offres</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div className="p-6 border-2 border-gray-200 rounded-lg text-center hover:border-indigo-500 hover:bg-indigo-50 transition">
+                <div onClick={() => navigate("/profil")} className="p-6 border-2 border-gray-200 rounded-lg text-center hover:border-indigo-500 hover:bg-indigo-50 transition cursor-pointer">
                     <div className="text-4xl mb-3">🔧</div>
                     <h4 className="text-lg font-bold text-gray-800 mb-2">Compte</h4>
                     <p className="text-gray-600 text-sm">Gère ton profil et tes paramètres</p>
                 </div>
-                <div className="p-6 border-2 border-gray-200 rounded-lg text-center hover:border-indigo-500 hover:bg-indigo-50 transition">
+                <div onClick={scrollToApplication} className="p-6 border-2 border-gray-200 rounded-lg text-center hover:border-indigo-500 hover:bg-indigo-50 transition">
                     <div className="text-4xl mb-3">📦</div>
                     <h4 className="text-lg font-bold text-gray-800 mb-2">Nos offres</h4>
                     <p className="text-gray-600 text-sm">Découvre tous nos services</p>
@@ -82,7 +100,7 @@ function Home() {
         </div>
 
             {/* <!-- Grille de cartes --> */}
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div id="applications" className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {/* <!-- WordPress --> */}
                 <div className="bg-white rounded-xl shadow-lg hover:shadow-xl transition overflow-hidden">
                     <div className="bg-gradient-to-br from-blue-100 to-blue-200 h-40 flex items-center justify-center">

@@ -29,9 +29,12 @@ function Navbar() {
                         <Link to="/" className="text-gray-700 hover:text-blue-600 transition">
                             Accueil
                         </Link>
-                        <Link to="/#offres" className="text-gray-700 hover:text-blue-600 transition">
+                        {/* <Link to="/#offres" className="text-gray-700 hover:text-blue-600 transition">
                             Offres
-                        </Link>
+                        </Link> */}
+                        <button onClick={() => navigate("/#applications")} className="text-gray-700 hover:text-blue-600 transition">
+                            Offres
+                        </button>
                         <Link to="/support" className="text-gray-700 hover:text-blue-600 transition">
                             Support
                         </Link>
