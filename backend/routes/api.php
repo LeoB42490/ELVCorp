@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
+use App\Http\Controllers\ApplicationOfferController;
 
 Route::get('/test', function () {
     return response()->json([
@@ -170,6 +171,22 @@ Route::middleware('auth:sanctum')->get('/me', function (Request $request) {
     ]);
 });
 
+Route::middleware('auth:sanctum')->put('/me', function (Request $request) {
+    $user = $request->user();
+    $validated = $request->validate([
+        'nom' => 'required|string|max:255',
+        'prenom' => 'required|string|max:255',
+        'email' => 'required|string|max:255|unique:users,email,' . $user->id,
+    ]);
+
+    $user->update($validated);
+
+    return response()->json([
+        'message' => 'Profil mis à jour avec succès',
+        'user' => $user,
+    ]);
+});
+
 Route::middleware('auth:sanctum')->post('/logout', function (Request $request) {
     $request->user()->currentAccessToken()->delete();
 
@@ -177,3 +194,5 @@ Route::middleware('auth:sanctum')->post('/logout', function (Request $request) {
         'message' => 'Déconnexion réussie'
     ]);
 });
+
+Route::get('/applications/{id}/offers', [ApplicationOfferController::class, 'getOffersByApplication']);

@@ -27,7 +27,7 @@ export async function loginUser(data: {
   email: string;
   password: string;
 }) {
-  const response = await fetch("/api/login", {
+  const response = await fetch(`${API_URL}/api/login`, { //TODO mettre vrai adresse IP
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -49,6 +49,24 @@ export async function getMe() {
         },
     });
 
+    return response.json();
+}
+
+export async function updateMe(data: {
+    nom: string;
+    prenom: string;
+    email: string;
+}) {
+    const token = localStorage.getItem("token");
+    const response = await fetch(`${API_URL}/api/me`,{
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify(data),
+    });
     return response.json();
 }
 
