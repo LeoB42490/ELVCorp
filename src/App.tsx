@@ -6,6 +6,8 @@ import MotDePasseOublie from "./pages/MotDePasseOublie";
 import ResetPassword from "./pages/ResetPassword";
 import Offers from "./pages/Offers";
 import Profil from "./pages/Profil";
+import Support from "./pages/Support";
+import Faq from "./pages/Faq";
 
 function App() {
     return (
@@ -18,6 +20,8 @@ function App() {
                 <Route path="/reset-password" element={<ResetPassword/>} />
                 <Route path="/offers/:id" element={<Offers />} />
                 <Route path="/profil" element={<Profil />} />
+                <Route path="/support" element={<Support />} />
+                <Route path="/faq" element={<Faq />} />
             </Routes>
         </BrowserRouter>
     );
