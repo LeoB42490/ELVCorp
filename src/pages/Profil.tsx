@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import { getMe, updateMe } from "../api";
+import Footer from "../components/Footer";
 
 type User = {
     id: number;
@@ -206,6 +207,7 @@ function Profil() {
                     </div>
                 </div>
             </main>
+            <Footer />
         </>
     );
 }
