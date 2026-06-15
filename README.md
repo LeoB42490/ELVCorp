@@ -30,7 +30,7 @@ nvm alias deault 22
 
 # TODO
 - Mise en place du paiement avec Paypal (developer) -> Si paiment OK, écriture dans la table SQL + appel script création conteneur + envoi mail pour dire paiement OK et création OK ou erreur ou autre problème
-- Agrandir les côtés des écrans pour qu'ils fassent toute la longueur
+- Agrandir les côtés des écrans pour qu'ils fassent toute la longueur ✅
 - Faire la page 'Mes instances' dans le profil afin de voir les instances qu'on a payé avec les informations
 - Faire la page 'Support' et la page 'Contact' 
 - Sur la page d'accueil ✅
