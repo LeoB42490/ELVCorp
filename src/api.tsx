@@ -1,4 +1,4 @@
-const API_URL = "http://192.128.6.48";
+const API_URL = "";
 
 export async function registerUser(data: {
     nom: string,
@@ -88,7 +88,7 @@ export async function resetPassword(data: {
     token: string,
     password: string
 }) {
-    const response = await fetch("api/reset-password", {
+    const response = await fetch("/api/reset-password", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",

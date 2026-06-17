@@ -27,7 +27,7 @@ function Offers() {
     const [error, setError] = useState("");
 
     useEffect(() => {
-        fetch(`http://192.128.6.48/api/applications/${id}/offers`) // TODO Modifier IP par ip serveur
+        fetch(`/api/applications/${id}/offers`)
             .then((res) => {
                 if (!res.ok) {
                     throw new Error("Erreur lors du chargement des offres");
