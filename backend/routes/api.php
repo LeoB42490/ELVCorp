@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
 use App\Http\Controllers\ApplicationOfferController;
+use App\Http\Controllers\OrderController;
 
 Route::get('/test', function () {
     return response()->json([
@@ -194,5 +195,10 @@ Route::middleware('auth:sanctum')->post('/logout', function (Request $request) {
         'message' => 'Déconnexion réussie'
     ]);
 });
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/orders', [OrderController::class, 'create']);
+    Route::post('/orders/{order}/capture', [OrderController::class, 'capture']);
+})
 
 Route::get('/applications/{id}/offers', [ApplicationOfferController::class, 'getOffersByApplication']);

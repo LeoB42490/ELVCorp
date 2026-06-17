@@ -28,4 +28,9 @@ class Offers extends Model
             'application_id',    
         );
     }
+
+    public function applicationOffers()
+    {
+        return $this->hasMany(ApplicationOffer::class, 'offer_id');
+    }
 }

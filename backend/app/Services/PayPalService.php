@@ -1,0 +1,52 @@
+<?php
+
+namespace App\Services;
+
+use Illuminate\Support\Facades\Http;
+
+class PayPalService
+{
+    private function getAccessToken()
+    {
+        $response = Http::withBasicAuth(
+                config('services.paypal.client_id'),
+                config('services.paypal.client_secret')
+            )->asForm()->post(config('services.paypal.base_url') . '/v1/oauth2/token', [
+                'grant_type' => 'client_credentials',
+            ]);
+
+        return $response->json()['access_token'];
+    }
+    
+
+    private function createOrder($amount)
+    {
+        $token = $this->getAccessToken();
+
+        $response = Http::withToken($token)->post(
+            config('services.paypal.base_url') . '/v2/checkout/orders',
+            [
+                'intent' => 'CAPTURE',
+                'purchase_units' => [[
+                    'amount' => [
+                        'currency_code' => config('services.paypal.currency'),
+                        'value' => number_format($amount, 2, '.', ''),
+                    ],
+                ]],
+            ]
+        );
+
+        return $response->json();
+    }
+
+    public function captureOrder($paypalOrderId)
+    {
+        $token = $this->getAccessToken();
+
+        $response = Http::withToken($token)->post(
+            config('services.paypal.base_url') . "/v2/checkout/orders/$paypalOrderId/capture"
+        );
+
+        return $response->json();
+    }
+}
