@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import PayPalButton from "../components/PaypalButton";
+
 type Offer = {
     id: number;
     name: string;
@@ -119,12 +121,8 @@ function Offers() {
                                         </ul>
                                     </div>
 
-                                    <button
-                                        onClick={() => handlePayment(offer.id)}
-                                        className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg transition"
-                                    >
-                                        Payer {Number(offer.price).toFixed(2)}€
-                                    </button>
+                                    
+                                    <PayPalButton applicationId={Number(id)} offerId={offer.id} />
                                 </div>
                             ))}
                         </div>
