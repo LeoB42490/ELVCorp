@@ -7,7 +7,7 @@ type PayPalButtonProps = {
     onSuccess?: () => void;
 };
 
-function PayPalButton({ applicationOfferId, onSuccess }: PayPalButtonProps) {
+function PayPalButton({ applicationId, offerId, onSuccess }: PayPalButtonProps) {
     const token = localStorage.getItem("token");
     const localOrderId = useRef<number | null>(null);
 
@@ -28,7 +28,8 @@ function PayPalButton({ applicationOfferId, onSuccess }: PayPalButtonProps) {
                             "Authorization": `Bearer ${token}`,
                         },
                         body: JSON.stringify({
-                            application_offer_id: applicationOfferId,
+                            application_id: applicationId,
+                            offer_id: offerId,
                         }),
                     });
 

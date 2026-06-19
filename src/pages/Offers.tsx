@@ -48,9 +48,9 @@ function Offers() {
             });
     }, [id]);
 
-    const handlePayment = (offerId: number) => {
-        navigate(`/payment/${id}/${offerId}`);
-    };
+    // const handlePayment = (offerId: number) => {
+    //     navigate(`/payment/${id}/${offerId}`);
+    // };
 
     if (loading) {
         return (

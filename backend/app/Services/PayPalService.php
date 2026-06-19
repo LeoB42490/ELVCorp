@@ -19,7 +19,7 @@ class PayPalService
     }
     
 
-    private function createOrder($amount)
+    public function createOrder($amount)
     {
         $token = $this->getAccessToken();
 
@@ -42,11 +42,13 @@ class PayPalService
     public function captureOrder($paypalOrderId)
     {
         $token = $this->getAccessToken();
-
-        $response = Http::withToken($token)->post(
-            config('services.paypal.base_url') . "/v2/checkout/orders/$paypalOrderId/capture"
-        );
-
+    
+        $response = Http::withToken($token)
+            ->withBody('{}', 'application/json')
+            ->post(
+                config('services.paypal.base_url') . "/v2/checkout/orders/$paypalOrderId/capture"
+            );
+    
         return $response->json();
     }
 }

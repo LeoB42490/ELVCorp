@@ -8,6 +8,7 @@ import Offers from "./pages/Offers";
 import Profil from "./pages/Profil";
 import Support from "./pages/Support";
 import Faq from "./pages/Faq";
+import Instances from "./pages/Instances";
 
 function App() {
     return (
@@ -22,6 +23,7 @@ function App() {
                 <Route path="/profil" element={<Profil />} />
                 <Route path="/support" element={<Support />} />
                 <Route path="/faq" element={<Faq />} />
+                <Route path="/instances" element={<Instances />} />
             </Routes>
         </BrowserRouter>
     );

@@ -12,6 +12,7 @@ use Illuminate\Support\Str;
 use Carbon\Carbon;
 use App\Http\Controllers\ApplicationOfferController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\InstanceController;
 
 Route::get('/test', function () {
     return response()->json([
@@ -200,5 +201,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/orders', [OrderController::class, 'create']);
     Route::post('/orders/{order}/capture', [OrderController::class, 'capture']);
 });
+
+Route::middleware('auth:sanctum')->get(
+    '/instances',
+    [InstanceController::class, 'index']
+);
 
 Route::get('/applications/{id}/offers', [ApplicationOfferController::class, 'getOffersByApplication']);

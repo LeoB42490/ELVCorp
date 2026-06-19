@@ -17,11 +17,16 @@ class ApplicationOffer extends Model
 
     public function offer()
     {
-        return $this->belongsTo(Offer::class, 'offer_id');
+        return $this->belongsTo(Offers::class, 'offer_id');
     }
 
     public function application()
     {
         return $this->belongsTo(Application::class, 'application_id');
+    }
+
+    public function instances()
+    {
+        return $this->hasMany(Instance::class);
     }
 }

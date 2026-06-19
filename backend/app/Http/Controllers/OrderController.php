@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use App\Models\ApplicationOffer;
+use App\Models\Instance;
 use App\Services\PayPalService;
 use Illuminate\Http\Request;
 
@@ -12,16 +13,19 @@ class OrderController extends Controller
     public function create(Request $request, PayPalService $paypal)
     {
         $request->validate([
-            'application_offer_id' => 'required|exists:application_offers,id',
+            'application_id' => 'required|exists:applications,id',
+            'offer_id' => 'required|exists:offers,id',
         ]);
 
         $applicationOffer = ApplicationOffer::with('offer')
-            ->findOrFail($request->application_offer_id);
+            ->where('application_id', $request->application_id)
+            ->where('offer_id', $request->offer_id)
+            ->firstOrFail();
 
         $amount = $applicationOffer->offer->price;
 
         $order = Order::create([
-            'user_id' => auth()->id(),
+            'user_id' => $request->user()->id,
             'application_offer_id' => $applicationOffer->id,
             'amount' => $amount,
             'status' => 'pending',
@@ -39,9 +43,9 @@ class OrderController extends Controller
         ]);
     }
 
-    public function capture(Order $order, PayPalService $paypal)
+    public function capture(Request $request, Order $order, PayPalService $paypal)
     {
-        if ($order->user_id !== auth()->id()) {
+        if ($order->user_id !== $request->user()->id) {
             abort(403);
         }
 
@@ -64,6 +68,15 @@ class OrderController extends Controller
             // Ici ensuite tu lanceras la création de l’instance Proxmox
             // Exemple futur :
             // app(InstanceService::class)->deploy($order);
+
+            $instance = Instance::create([
+                'user_id' => $order->user_id,
+                'application_offer_id' => $order->application_offer_id,
+                'name' => 'instance-' . $order->id,
+                'status' => 'provisioning',
+            ]);
+
+            app(\App\Services\ProxmoxDeployService::class)->deployMinecraft($instance);
 
             return response()->json([
                 'message' => 'Paiement validé',
