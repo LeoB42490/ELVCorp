@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import PayPalButton from "../components/PaypalButton";
+import { API_URL } from "../api";
 
 type Offer = {
     id: number;
@@ -29,7 +30,7 @@ function Offers() {
     const [error, setError] = useState("");
 
     useEffect(() => {
-        fetch(`/api/applications/${id}/offers`)
+        fetch(`${API_URL}/api/applications/${id}/offers`)
             .then((res) => {
                 if (!res.ok) {
                     throw new Error("Erreur lors du chargement des offres");

@@ -1,5 +1,6 @@
 import { PayPalButtons, PayPalScriptProvider } from "@paypal/react-paypal-js";
 import { useRef } from "react";
+import { API_URL } from "../api";
 
 type PayPalButtonProps = {
     applicationId: number;
@@ -20,7 +21,7 @@ function PayPalButton({ applicationId, offerId, onSuccess }: PayPalButtonProps) 
         >
             <PayPalButtons
                 createOrder={async () => {
-                    const response = await fetch(`${import.meta.env.VITE_API_URL}/orders`, {
+                    const response = await fetch(`${API_URL}/api/orders`, {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json",
@@ -49,7 +50,7 @@ function PayPalButton({ applicationId, offerId, onSuccess }: PayPalButtonProps) 
                         return;
                     }
 
-                    const response = await fetch(`${import.meta.env.VITE_API_URL}/orders/${localOrderId.current}/capture`, {
+                    const response = await fetch(`${API_URL}/api/orders/${localOrderId.current}/capture`, {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json",

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import { API_URL } from "../api";
 
 type Instance = {
     id: number;
@@ -20,7 +21,7 @@ function Instances() {
     useEffect(() => {
         const token = localStorage.getItem("token");
 
-        fetch(`${import.meta.env.VITE_API_URL}/instances`, {
+        fetch(`${API_URL}/api/instances`, {
             headers: {
                 "Accept": "application/json",
                 "Authorization": `Bearer ${token}`,
