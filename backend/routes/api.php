@@ -208,3 +208,5 @@ Route::middleware('auth:sanctum')->get(
 );
 
 Route::get('/applications/{id}/offers', [ApplicationOfferController::class, 'getOffersByApplication']);
+Route::delete('/instances/{id}', [InstanceController::class, 'destroy'])
+    ->middleware('auth:sanctum');

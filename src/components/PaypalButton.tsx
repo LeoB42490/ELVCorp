@@ -1,16 +1,18 @@
 import { PayPalButtons, PayPalScriptProvider } from "@paypal/react-paypal-js";
 import { useRef } from "react";
 import { API_URL } from "../api";
+import { useNavigate } from "react-router-dom";
 
 type PayPalButtonProps = {
     applicationId: number;
     offerId: number;
     onSuccess?: () => void;
 };
-
-function PayPalButton({ applicationId, offerId, onSuccess }: PayPalButtonProps) {
+//, onSuccess
+function PayPalButton({ applicationId, offerId}: PayPalButtonProps) {
     const token = localStorage.getItem("token");
     const localOrderId = useRef<number | null>(null);
+    const navigate = useNavigate();
 
     return (
         <PayPalScriptProvider
@@ -66,8 +68,9 @@ function PayPalButton({ applicationId, offerId, onSuccess }: PayPalButtonProps) 
                         return;
                     }
 
-                    alert("Paiement validé !");
-                    onSuccess?.();
+                    // alert("Paiement validé !");
+                    // onSuccess?.();
+                    navigate("/instances");
                 }}
             />
         </PayPalScriptProvider>

@@ -6,6 +6,7 @@ use App\Models\Order;
 use App\Models\ApplicationOffer;
 use App\Models\Instance;
 use App\Services\PayPalService;
+use App\Jobs\DeployInstanceJob;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
@@ -17,13 +18,14 @@ class OrderController extends Controller
             'offer_id' => 'required|exists:offers,id',
         ]);
 
-        $applicationOffer = ApplicationOffer::with('offer')
+        $applicationOffer = ApplicationOffer::with(['offer', 'application'])
             ->where('application_id', $request->application_id)
             ->where('offer_id', $request->offer_id)
             ->firstOrFail();
 
         $amount = $applicationOffer->offer->price;
 
+        $applicationName = $applicationOffer->application->name;
         $order = Order::create([
             'user_id' => $request->user()->id,
             'application_offer_id' => $applicationOffer->id,
@@ -65,19 +67,20 @@ class OrderController extends Controller
                 'paypal_capture_id' => $captureId,
             ]);
 
-            // Ici ensuite tu lanceras la création de l’instance Proxmox
-            // Exemple futur :
-            // app(InstanceService::class)->deploy($order);
+            $applicationOffer = ApplicationOffer::with('application')
+                ->findOrFail($order->application_offer_id);
 
             $instance = Instance::create([
                 'user_id' => $order->user_id,
                 'application_offer_id' => $order->application_offer_id,
-                'name' => 'instance-' . $order->id,
+                'name' => $applicationOffer->application->name,
                 'status' => 'provisioning',
             ]);
 
-            app(\App\Services\ProxmoxDeployService::class)->deployMinecraft($instance);
+            //app(\App\Services\ProxmoxDeployService::class)->deployMinecraft($instance);
 
+            DeployInstanceJob::dispatch($instance->id);
+            
             return response()->json([
                 'message' => 'Paiement validé',
                 'order' => $order,

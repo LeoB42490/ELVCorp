@@ -44,6 +44,39 @@ function Instances() {
             });
     }, []);
 
+    function handleDelete(instanceId: number) {
+        const confirmDelete = window.confirm(
+            "Voulez-vous vraiment supprimer cette instance ?"
+        );
+
+        if (!confirmDelete) return;
+
+        const token = localStorage.getItem("token");
+
+        fetch(`${API_URL}/api/instances/${instanceId}`, {
+            method: "DELETE",
+            headers: {
+                "Accept": "application/json",
+                "Authorization": `Bearer ${token}`
+            },
+        })
+        
+            .then((res) => {
+                if (!res.ok) throw new Error();
+
+                setInstances((prevInstances) =>
+                    prevInstances.map((instance) =>
+                        instance.id === instanceId
+                            ? { ...instance, status: "deleting" }
+                            : instance
+                    )
+                );
+            })
+            .catch(() => {
+                alert("Impossible de supprimer cette instance.");
+            });
+    }
+
     return (
         <>
             <Navbar />
@@ -75,8 +108,15 @@ function Instances() {
                             {instances.map((instance) => (
                                 <div
                                     key={instance.id}
-                                    className="bg-white rounded-2xl shadow-md p-6"
+                                    className="relative bg-white rounded-2xl shadow-md p-6"
                                 >
+                                    <button
+                                        onClick={() => handleDelete(instance.id)}
+                                        className="absolute top-4 right-4 text-red-500 hover:text-red-700 text-xl"
+                                        title="Supprimer l'instance"
+                                    >
+                                        🗑️ 
+                                    </button>
                                     <h2 className="text-2xl font-bold text-gray-900 mb-4">
                                         {instance.name}
                                     </h2>
@@ -94,11 +134,6 @@ function Instances() {
                                     <p>
                                         <span className="font-semibold">Port :</span>{" "}
                                         {instance.port ?? "En attente"}
-                                    </p>
-
-                                    <p>
-                                        <span className="font-semibold">CTID Proxmox :</span>{" "}
-                                        {instance.proxmox_ctid ?? "En attente"}
                                     </p>
 
                                     <p className="text-sm text-gray-500 mt-4">
