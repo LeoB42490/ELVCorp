@@ -2,6 +2,9 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import PayPalButton from "../components/PaypalButton";
+import { API_URL } from "../api";
+
 type Offer = {
     id: number;
     name: string;
@@ -27,7 +30,7 @@ function Offers() {
     const [error, setError] = useState("");
 
     useEffect(() => {
-        fetch(`/api/applications/${id}/offers`)
+        fetch(`${API_URL}/api/applications/${id}/offers`)
             .then((res) => {
                 if (!res.ok) {
                     throw new Error("Erreur lors du chargement des offres");
@@ -46,9 +49,9 @@ function Offers() {
             });
     }, [id]);
 
-    const handlePayment = (offerId: number) => {
-        navigate(`/payment/${id}/${offerId}`);
-    };
+    // const handlePayment = (offerId: number) => {
+    //     navigate(`/payment/${id}/${offerId}`);
+    // };
 
     if (loading) {
         return (
@@ -119,12 +122,8 @@ function Offers() {
                                         </ul>
                                     </div>
 
-                                    <button
-                                        onClick={() => handlePayment(offer.id)}
-                                        className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg transition"
-                                    >
-                                        Payer {Number(offer.price).toFixed(2)}€
-                                    </button>
+                                    
+                                    <PayPalButton applicationId={Number(id)} offerId={offer.id} />
                                 </div>
                             ))}
                         </div>

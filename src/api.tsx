@@ -1,4 +1,7 @@
-const API_URL = "";
+const { hostname, protocol } = window.location;
+export const API_URL = `${protocol}//${
+  hostname.startsWith('[') ? hostname : hostname.includes(':') ? `[${hostname}]` : hostname
+}:8000`;
 
 export async function registerUser(data: {
     nom: string,

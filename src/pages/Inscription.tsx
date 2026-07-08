@@ -11,34 +11,44 @@ function Inscription() {
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
 
     async function handleRegister(e: React.FormEvent) {
         e.preventDefault();
         setError("");
+        setLoading(true);
 
         if (password !== confirmPassword) {
             setError("Les mots de passe ne correspondent pas");
+            setLoading(false);
             return;
         }
 
-        const data = await registerUser({
-            nom,
-            prenom,
-            email,
-            password,
-        });
+        try {
+            const data = await registerUser({
+                nom,
+                prenom,
+                email,
+                password,
+            });
 
-        if (data.token) {
-            localStorage.setItem("token", data.token);
-            window.location.href = "/";
-        } else if (data.errors) {
-            const errors = data.errors as Record<string, string[]>;
-            const errorsArray = Object.values(errors);
-            if (errorsArray.length > 0 && errorsArray[0].length > 0) {
-                setError(errorsArray[0][0]);
+            if (data.token) {
+                localStorage.setItem("token", data.token);
+                window.location.href = "/";
+            } else if (data.errors) {
+                const errors = data.errors as Record<string, string[]>;
+                const errorsArray = Object.values(errors);
+                if (errorsArray.length > 0 && errorsArray[0].length > 0) {
+                    setError(errorsArray[0][0]);
+                }
+            } else {
+                setError(data.message || "Erreur lors de la connexion");
             }
-        } else {
-            setError(data.message || "Erreur lors de la connexion");
+        } catch (err) {
+            setError(`Erreur : ${err instanceof Error ? err.message : "Connexion au serveur impossible"}`);
+            console.error("Register error:", err);
+        } finally {
+            setLoading(false);
         }
     }
 
@@ -148,8 +158,9 @@ function Inscription() {
 
                         <button
                             type="submit"
-                            className="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-3 rounded-lg transition mt-6 block text-center">
-                            Créer mon compte
+                            disabled={loading}
+                            className="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-3 rounded-lg transition mt-6 block text-center disabled:opacity-50 disabled:cursor-not-allowed">
+                            {loading ? "Création en cours..." : "Créer mon compte"}
                         </button>
                     </form>
 
