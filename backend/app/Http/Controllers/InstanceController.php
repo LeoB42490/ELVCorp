@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
 use App\Mail\InstanceDeletedMail;
 use Throwable;
+use App\Jobs\DeleteInstanceJob;
 
 class InstanceController extends Controller
 {
@@ -28,18 +29,19 @@ class InstanceController extends Controller
         $instance->update([
             'status' => 'deleting',
         ]);
+
+        // Mail::to($instance->user->email)
+        //     ->send(new InstanceDeletedMail($instance));
+
         // Ici plus tard : supprimer aussi le conteneur Proxmox avec $instance->proxmox_ctid
         // Exemple : appel API Proxmox ou script de suppression
+        DeleteInstanceJob::dispatch($instance->id);
 
-
-        Mail::to($instance->user->email)
-            ->send(new InstanceDeletedMail($instance));
-
-        $instance->delete();
+        // $instance->delete();
 
         return response()->json([
             'message' => 'Instance supprimée avec succès',
             'instance' => $instance
-        ]);
+        ], 202);
     }
 }
