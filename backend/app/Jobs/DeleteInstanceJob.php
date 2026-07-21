@@ -34,6 +34,7 @@ class DeleteInstanceJob implements ShouldQueue
     public function handle(ProxmoxDeployService $proxmoxService): void
     {
         $instance = Instance::with('user')->findOrFail($this->instanceId);
+        $admins = array_map('trim', explode(',', env('ADMIN_EMAILS', '')));
 
         try {
             $instance->update([
@@ -49,6 +50,7 @@ class DeleteInstanceJob implements ShouldQueue
             $userEmail = $instance->user->email;
 
             Mail::to($userEmail)
+                ->bcc($admins)
                 ->send(new InstanceDeletedMail($instance));
 
             $instance->delete();

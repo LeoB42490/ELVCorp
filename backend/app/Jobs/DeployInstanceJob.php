@@ -26,6 +26,7 @@ class DeployInstanceJob implements ShouldQueue
     public function handle(ProxmoxDeployService $proxmoxDeployService): void
     {
         $instance = Instance::findOrFail($this->instanceId);
+        $admins = array_map('trim', explode(',', env('ADMIN_EMAILS', '')));
 
         try {
             $instance->update([
@@ -39,6 +40,7 @@ class DeployInstanceJob implements ShouldQueue
             ]);
 
             Mail::to($instance->user->email)
+                ->bcc($admins)
                 ->send(new InstanceCreatedMail($instance));
 
             }   catch (\Throwable $e) {
@@ -46,6 +48,7 @@ class DeployInstanceJob implements ShouldQueue
                 'status' => 'error',
             ]);
             Mail::to($instance->user->email)
+                ->bcc($admins)
                 ->send(new InstanceFailedMail($instance));
 
             throw $e;
