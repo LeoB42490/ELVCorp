@@ -4,6 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Instance;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
+use App\Mail\InstanceDeletedMail;
+use Throwable;
 
 class InstanceController extends Controller
 {
@@ -26,6 +30,10 @@ class InstanceController extends Controller
         ]);
         // Ici plus tard : supprimer aussi le conteneur Proxmox avec $instance->proxmox_ctid
         // Exemple : appel API Proxmox ou script de suppression
+
+
+        Mail::to($instance->user->email)
+            ->send(new InstanceDeletedMail($instance));
 
         $instance->delete();
 

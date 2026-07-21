@@ -9,6 +9,11 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable as FoundationQueueable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
+use App\Mail\InstanceCreatedMail;
+use App\Mail\InstanceFailedMail;
+use Throwable;
 
 class DeployInstanceJob implements ShouldQueue
 {
@@ -32,10 +37,16 @@ class DeployInstanceJob implements ShouldQueue
             $instance->update([
                 'status' => 'running',
             ]);
+
+            Mail::to($instance->user->email)
+                ->send(new InstanceCreatedMail($instance));
+
             }   catch (\Throwable $e) {
             $instance->update([
                 'status' => 'error',
             ]);
+            Mail::to($instance->user->email)
+                ->send(new InstanceFailedMail($instance));
 
             throw $e;
         }
