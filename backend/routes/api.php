@@ -13,6 +13,7 @@ use Carbon\Carbon;
 use App\Http\Controllers\ApplicationOfferController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\InstanceController;
+use App\Http\Controllers\SupportController;
 
 Route::get('/test', function () {
     return response()->json([
@@ -210,3 +211,6 @@ Route::middleware('auth:sanctum')->get(
 Route::get('/applications/{id}/offers', [ApplicationOfferController::class, 'getOffersByApplication']);
 Route::delete('/instances/{id}', [InstanceController::class, 'destroy'])
     ->middleware('auth:sanctum');
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/support', [SupportController::class, 'send']);
+});
