@@ -16,8 +16,9 @@ function ResetPassword() {
     const [message, setMessage] = useState("");
     const [error, setError] = useState("");
 
-    async function handleSubmit(e: React.FormEvent) {
+    async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
+
         setMessage("");
         setError("");
 
@@ -26,22 +27,46 @@ function ResetPassword() {
             return;
         }
 
+        if (password.length < 8) {
+            setError("Le mot de passe doit contenir au moins 8 caractères.");
+            return;
+        }
+
         if (password !== confirmPassword) {
             setError("Les mots de passe ne correspondent pas.");
             return;
         }
 
-        const data = await resetPassword({
-            email,
-            token,
-            password,
-        });
+        try {
+            const data = await resetPassword({
+                email,
+                token,
+                password,
+                password_confirmation: confirmPassword,
+            });
 
-        if (data.message === "Mot de passe réinitialisé avec succès.") {
-            setMessage(data.message);
-            setTimeout(() => navigate("/login"), 1500);
-        } else {
-            setError(data.message || "Erreur lors de la réinitialisation.");
+            setMessage(
+                data.message ?? "Votre mot de passe a bien été modifié."
+            );
+
+            setTimeout(() => {
+                navigate("/login");
+            }, 1500);
+        } catch (exception: any) {
+            if (exception.status === 422) {
+                setError(
+                    exception.data?.errors?.password?.[0] ??
+                    exception.data?.errors?.email?.[0] ??
+                    exception.data?.errors?.token?.[0] ??
+                    exception.data?.message ??
+                    "Les informations renseignées ne sont pas valides."
+                );
+            } else {
+                setError(
+                    exception.data?.message ??
+                    "Erreur lors de la réinitialisation."
+                );
+            }
         }
     }
 
@@ -76,7 +101,7 @@ function ResetPassword() {
                             </button>
                         </div>
                     ) : (
-                        <form className="space-y-6" onSubmit={handleSubmit}>
+                        <form className="space-y-6" onSubmit={handleSubmit} noValidate>
                             <div>
                                 <label htmlFor="password" className="block text-sm font-medium text-gray-900 mb-2">
                                     Nouveau mot de passe
@@ -91,7 +116,7 @@ function ResetPassword() {
                                     required
                                 />
                                 <p className="text-xs text-gray-500 mt-1">
-                                    Au minimum 6 caractères
+                                    Au minimum 8 caractères
                                 </p>
                             </div>
 

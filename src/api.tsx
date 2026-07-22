@@ -74,8 +74,10 @@ export async function updateMe(data: {
     return response.json();
 }
 
-export async function forgotPassword(data: {email: string}) {
-    const response = await fetch("/api/mot-de-passe-oublie", {
+export async function forgotPassword(data: {
+    email: string;
+}) {
+    const response = await fetch(`${API_URL}/api/mot-de-passe-oublie`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -84,15 +86,25 @@ export async function forgotPassword(data: {email: string}) {
         body: JSON.stringify(data),
     });
 
-    return response.json();
+    const result = await response.json();
+
+    if (!response.ok) {
+        throw {
+            status: response.status,
+            data: result,
+        };
+    }
+
+    return result;
 }
 
 export async function resetPassword(data: {
-    email: string,
-    token: string,
-    password: string
+    email: string;
+    token: string;
+    password: string;
+    password_confirmation: string;
 }) {
-    const response = await fetch("/api/reset-password", {
+    const response = await fetch(`${API_URL}/api/reset-password`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -101,5 +113,14 @@ export async function resetPassword(data: {
         body: JSON.stringify(data),
     });
 
-    return response.json();
+    const result = await response.json();
+
+    if (!response.ok) {
+        throw {
+            status: response.status,
+            data: result,
+        };
+    }
+
+    return result;
 }

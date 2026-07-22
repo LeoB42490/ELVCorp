@@ -6,14 +6,11 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Str;
-use Carbon\Carbon;
 use App\Http\Controllers\ApplicationOfferController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\InstanceController;
 use App\Http\Controllers\SupportController;
+use App\Http\Controllers\PasswordResetController;
 
 Route::get('/test', function () {
     return response()->json([
@@ -83,91 +80,6 @@ Route::post('/login', function (Request $request) {
     ]);
 });
 
-Route::post('/mot-de-passe-oublie', function (Request $request) {
-    if (!$request->email) {
-        return response()->json([
-            'message' => "L'adresse mail est obligatoire."
-        ], 422);
-    }
-
-    $user = User::where('email', $request->email)->first();
-
-    if (!$user) {
-        return response()->json([
-            'message' => 'Si un compte existe avec cette adresse, un lien de réinitialisation a été envoyé.'
-        ]);
-    }
-
-    $token = Str::random(64);
-
-    DB::table('password_reset_tokens')->updateOrInsert(
-        ['email' => $request->email],
-        [
-            'token' => Hash::make($token),
-            'created_at' => now(),
-        ]
-    );
-
-    $resetUrl = 'http://192.128.6.48/reset-password?email=' . urlencode($request->email) . '&token=' . $token;
-
-    // Pour le moment, on met le lien dans les logs Laravel
-    logger('Lien reset password : ' . $resetUrl);
-
-    return response()->json([
-        'message' => 'Si un compte existe avec cette adresse, un lien de réinitialisation a été envoyé.'
-    ]);
-});
-
-Route::post('/reset-password', function (Request $request) {
-    if (!$request->email || !$request->token || !$request->password) {
-        return response()->json([
-            'message' => 'Tous les champs sont obligatoires.'
-        ], 422);
-    }
-
-    if (strlen($request->password) < 6) {
-        return response()->json([
-            'message' => 'Le mot de passe doit contenir au moins 6 caractères.'
-        ], 422);
-    }
-
-    $reset = DB::table('password_reset_tokens')
-        ->where('email', $request->email)
-        ->first();
-
-    if (!$reset || !Hash::check($request->token, $reset->token)) {
-        return response()->json([
-            'message' => 'Le lien de réinitialisation est invalide.'
-        ], 422);
-    }
-
-    if (Carbon::parse($reset->created_at)->addMinutes(30)->isPast()) {
-        return response()->json([
-            'message' => 'Le lien de réinitialisation a expiré.'
-        ], 422);
-    }
-
-    $user = User::where('email', $request->email)->first();
-
-    if (!$user) {
-        return response()->json([
-            'message' => 'Utilisateur introuvable.'
-        ], 404);
-    }
-
-    $user->password = Hash::make($request->password);
-    $user->save();
-
-    DB::table('password_reset_tokens')
-        ->where('email', $request->email)
-        ->delete();
-
-    return response()->json([
-        'message' => 'Mot de passe réinitialisé avec succès.'
-    ]);
-});
-
-
 Route::middleware('auth:sanctum')->get('/me', function (Request $request) {
     return response()->json([
         'user' => $request->user()
@@ -214,3 +126,13 @@ Route::delete('/instances/{id}', [InstanceController::class, 'destroy'])
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/support', [SupportController::class, 'send']);
 });
+
+Route::post(
+    '/mot-de-passe-oublie',
+    [PasswordResetController::class, 'forgotPassword']
+);
+
+Route::post(
+    '/reset-password',
+    [PasswordResetController::class, 'resetPassword']
+);

@@ -11,14 +11,31 @@ function MotDePasseOublie() {
 
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
+
         setMessage("");
         setError("");
 
-        const data = await forgotPassword({ email });
-        if (data.message) {
-            setMessage(data.message);
-        } else {
-            setError("Erreur lors de la demande de réinitialisation du mot de passe")
+        try {
+            const data = await forgotPassword({ email });
+
+            setMessage(
+                data.message ??
+                "Si cette adresse correspond à un compte, un lien de réinitialisation a été envoyé."
+            );
+        } catch (exception: any) {
+            if (exception.status === 422) {
+                const emailError = exception.data?.errors?.email?.[0];
+
+                setError(
+                    emailError ??
+                    "L’adresse e-mail renseignée n’est pas valide."
+                );
+            } else {
+                setError(
+                    exception.data?.message ??
+                    "Erreur lors de la demande de réinitialisation du mot de passe."
+                );
+            }
         }
     }
 
@@ -39,7 +56,7 @@ function MotDePasseOublie() {
                     </div>
 
                     {/* <!-- Reset Form --> */}
-                    <form className="space-y-6" onSubmit={handleSubmit}>
+                    <form className="space-y-6" onSubmit={handleSubmit} noValidate>
                         {/* <!-- Email --> */}
                         <div>
                             <label htmlFor="email" className="block text-sm font-medium text-gray-900 mb-2">

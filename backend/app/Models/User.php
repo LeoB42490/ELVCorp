@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use App\Notifications\ResetPasswordNotification;
 
 #[Fillable(['nom' ,'prenom' ,'email', 'password'])]
 #[Hidden(['password'])]
@@ -34,5 +35,10 @@ class User extends Authenticatable
     public function instances()
     {
         return $this->hasMany(Instance::class);
+    }
+
+    public function sendPasswordResetNotification($token): void
+    {
+        $this->notify(new ResetPasswordNotification($token));
     }
 }
