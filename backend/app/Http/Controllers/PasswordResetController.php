@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rules\Password as PasswordRule;
+use App\Notifications\ResetPasswordNotification;
 
 class PasswordResetController extends Controller
 {
@@ -24,11 +25,21 @@ class PasswordResetController extends Controller
                     'required',
                     'email',
                 ],
+                'frontend_url' => [
+                'required',
+                'url',
+                ],
             ],
             [
                 'email.required' => 'L’adresse e-mail est obligatoire.',
                 'email.email' => 'L’adresse e-mail n’est pas valide.',
-            ]
+                'frontend_url.required' => 'L’adresse du site est obligatoire.',
+                'frontend_url.url' => 'L’adresse du site n’est pas valide.',
+            ],
+        );
+        
+        ResetPasswordNotification::setFrontendUrl(
+            $validated['frontend_url']
         );
 
         $status = Password::sendResetLink([

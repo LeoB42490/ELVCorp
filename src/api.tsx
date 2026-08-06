@@ -77,13 +77,16 @@ export async function updateMe(data: {
 export async function forgotPassword(data: {
     email: string;
 }) {
-    const response = await fetch(`${API_URL}/api/mot-de-passe-oublie`, {
+    const response = await fetch("/api/mot-de-passe-oublie", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
             "Accept": "application/json",
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify({
+            email: data.email,
+            frontend_url: window.location.origin,
+        }),
     });
 
     const result = await response.json();
@@ -98,13 +101,40 @@ export async function forgotPassword(data: {
     return result;
 }
 
+// export async function resetPassword(data: {
+//     email: string;
+//     token: string;
+//     password: string;
+//     password_confirmation: string;
+// }) {
+//     const response = await fetch(`${API_URL}/api/reset-password`, {
+//         method: "POST",
+//         headers: {
+//             "Content-Type": "application/json",
+//             "Accept": "application/json",
+//         },
+//         body: JSON.stringify(data),
+//     });
+
+//     const result = await response.json();
+
+//     if (!response.ok) {
+//         throw {
+//             status: response.status,
+//             data: result,
+//         };
+//     }
+
+//     return result;
+// }
+
 export async function resetPassword(data: {
     email: string;
     token: string;
     password: string;
     password_confirmation: string;
 }) {
-    const response = await fetch(`${API_URL}/api/reset-password`, {
+    const response = await fetch("/api/reset-password", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",

@@ -10,9 +10,16 @@ class ResetPasswordNotification extends Notification
 {
     use Queueable;
 
+    private static ?string $frontendUrl = null;
+
     public function __construct(
         public string $token
     ) {
+    }
+
+    public static function setFrontendUrl(string $frontendUrl): void
+    {
+        self::$frontendUrl = rtrim($frontendUrl, '/');
     }
 
     public function via(object $notifiable): array
@@ -20,11 +27,14 @@ class ResetPasswordNotification extends Notification
         return ['mail'];
     }
 
-    public function toMail(object $notifiable)
+    public function toMail(object $notifiable): MailMessage
     {
-        $url = config('app.frontend_url')
-            . 'reset-password?token='
-            . $this->token
+        $frontendUrl = self::$frontendUrl
+            ?? rtrim(config('app.frontend_url'), '/');
+        
+        $url = $frontendUrl
+            . '/reset-password?token='
+            . urlencode($this->token)
             . '&email='
             . urlencode($notifiable->email);
 
@@ -32,6 +42,13 @@ class ResetPasswordNotification extends Notification
             ->subject('Réinitialisation de votre mot de passe')
             ->view(
                 'emails.password-reset',
+                [
+                    'url' => $url,
+                    'user' => $notifiable,
+                ]
+            )
+            ->text(
+                'emails.password-reset-text',
                 [
                     'url' => $url,
                     'user' => $notifiable,
