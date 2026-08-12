@@ -232,7 +232,7 @@ class ProxmoxDeployService
             'instance_id' => $instance->id,
             'vmid' => $vmid,
             'result_code' => $resultCode,
-            'output' => $outputText,
+            'success' => str_contains($outputText, 'UPGRADE_SUCCESS'),
         ]);
 
         if ($resultCode !== 0) {
