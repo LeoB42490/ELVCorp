@@ -9,6 +9,7 @@ import Support from "./pages/Support";
 import Faq from "./pages/Faq";
 import Instances from "./pages/Instances";
 import ReinitialiserMotDePasse from "./pages/ReinitialiserMotDePasse";
+import UpgradeInstance from "./pages/UpgradeInstance";
 
 function App() {
     return (
@@ -24,6 +25,7 @@ function App() {
                 <Route path="/faq" element={<Faq />} />
                 <Route path="/instances" element={<Instances />} />
                 <Route path="/reset-password" element={<ReinitialiserMotDePasse />} />
+                <Route path="/instances/:id/upgrade" element={<UpgradeInstance/>} />
             </Routes>
         </BrowserRouter>
     );

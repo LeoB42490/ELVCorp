@@ -156,3 +156,62 @@ export async function resetPassword(data: {
 
     return result;
 }
+
+export async function getInstanceUpgrades(instanceId: number) {
+    const token = localStorage.getItem("token");
+
+    const response = await fetch(
+        `${API_URL}/api/instances/${instanceId}/upgrades`,
+        {
+            method: "GET",
+            headers: {
+                Accept: "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+        }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+        throw new Error(
+            data.message ??
+            "Impossible de récupérer les offres disponibles."
+        );
+    }
+
+    return data;
+}
+
+export async function upgradeInstance(
+    instanceId: number,
+    applicationOfferId: number
+) {
+    const token = localStorage.getItem("token");
+
+    const response = await fetch(
+        `${API_URL}/api/instances/${instanceId}/upgrade`,
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Accept: "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+                application_offer_id: applicationOfferId,
+            }),
+        }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+        throw new Error(
+            data.message ??
+            "Impossible de modifier cette instance."
+        );
+    }
+
+    return data;
+}

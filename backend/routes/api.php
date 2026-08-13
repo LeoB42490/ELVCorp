@@ -136,3 +136,17 @@ Route::post(
     '/reset-password',
     [PasswordResetController::class, 'resetPassword']
 );
+
+Route::middleware('auth:sanctum')->group(function () {
+
+    Route::get(
+        '/instances/{id}/upgrades',
+        [InstanceController::class, 'availableUpgrades']
+    );
+
+    Route::post(
+        '/instances/{id}/upgrade',
+        [InstanceController::class, 'upgrade']
+    );
+
+});
