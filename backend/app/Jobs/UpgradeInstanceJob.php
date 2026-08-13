@@ -11,6 +11,9 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 use Throwable;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\InstanceUpgradedMail;
+use App\Mail\InstanceUpgradeFailedMail;
 
 class UpgradeInstanceJob implements ShouldQueue
 {
@@ -30,6 +33,7 @@ class UpgradeInstanceJob implements ShouldQueue
     public function handle(ProxmoxDeployService $proxmoxDeployService): void
     {
         $instance = Instance::findOrFail($this->instanceId);
+        $admins = array_map('trim', explode(',', env('ADMIN_EMAILS', '')));
 
         try {
             $instance->update([
@@ -46,6 +50,15 @@ class UpgradeInstanceJob implements ShouldQueue
                 'status' => 'running',
             ]);
 
+            $instance->load(
+                'user',
+                'applicationOffer.offer'
+            );
+
+            Mail::to($instance->user->email)
+                ->bcc($admins)
+                ->send(new InstanceUpgradedMail($instance));
+
             Log::info('Upgrade instance terminé', [
                 'instance_id' => $instance->id,
                 'new_application_offer_id' => $this->newApplicationOfferId,
@@ -54,6 +67,14 @@ class UpgradeInstanceJob implements ShouldQueue
             $instance->update([
                 'status' => 'upgrade_error',
             ]);
+
+            $instance->load('user');
+
+            Mail::to($instance->user->email)
+                ->bcc($admins)
+                ->send(
+                    new InstanceUpgradeFailedMail($instance)
+            );
 
             Log::error('Erreur upgrade instance', [
                 'instance_id' => $instance->id,

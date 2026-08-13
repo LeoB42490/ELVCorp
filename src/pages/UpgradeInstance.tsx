@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import UpgradePayPalButton from "../components/UpgradePaypalButton";
 import {
     getInstanceUpgrades,
-    upgradeInstance
 } from "../api";
 
 type Offer = {
@@ -42,10 +42,10 @@ function UpgradeInstance() {
         useState<InstanceUpgradeData | null>(null);
 
     const [loading, setLoading] = useState(true);
-    const [upgrading, setUpgrading] = useState(false);
+    //const [upgrading, setUpgrading] = useState(false);
 
     const [error, setError] = useState("");
-    const [message, setMessage] = useState("");
+    //const [message, setMessage] = useState("");
 
     useEffect(() => {
         async function loadOffers() {
@@ -82,54 +82,54 @@ function UpgradeInstance() {
 
     }, [id]);
 
-    async function handleUpgrade(
-        applicationOfferId: number
-    ) {
-        if (!id) {
-            return;
-        }
+    // async function handleUpgrade(
+    //     applicationOfferId: number
+    // ) {
+    //     if (!id) {
+    //         return;
+    //     }
 
-        const confirmUpgrade = window.confirm(
-            "Voulez-vous vraiment passer cette instance au plan supérieur ?"
-        );
+    //     const confirmUpgrade = window.confirm(
+    //         "Voulez-vous vraiment passer cette instance au plan supérieur ?"
+    //     );
 
-        if (!confirmUpgrade) {
-            return;
-        }
+    //     if (!confirmUpgrade) {
+    //         return;
+    //     }
 
-        try {
-            setUpgrading(true);
-            setError("");
-            setMessage("");
+    //     try {
+    //         setUpgrading(true);
+    //         setError("");
+    //         setMessage("");
 
-            const result = await upgradeInstance(
-                Number(id),
-                applicationOfferId
-            );
+    //         const result = await upgradeInstance(
+    //             Number(id),
+    //             applicationOfferId
+    //         );
 
-            setMessage(
-                result.message ??
-                "La modification de votre instance a été lancée."
-            );
+    //         setMessage(
+    //             result.message ??
+    //             "La modification de votre instance a été lancée."
+    //         );
 
-            setTimeout(() => {
-                navigate("/instances");
-            }, 2000);
+    //         setTimeout(() => {
+    //             navigate("/instances");
+    //         }, 2000);
 
-        } catch (error) {
+    //     } catch (error) {
 
-            if (error instanceof Error) {
-                setError(error.message);
-            } else {
-                setError(
-                    "Une erreur est survenue pendant la modification."
-                );
-            }
+    //         if (error instanceof Error) {
+    //             setError(error.message);
+    //         } else {
+    //             setError(
+    //                 "Une erreur est survenue pendant la modification."
+    //             );
+    //         }
 
-        } finally {
-            setUpgrading(false);
-        }
-    }
+    //     } finally {
+    //         setUpgrading(false);
+    //     }
+    // }
 
     if (loading) {
         return (
@@ -182,11 +182,11 @@ function UpgradeInstance() {
                         </div>
                     )}
 
-                    {message && (
+                    {/* {message && (
                         <div className="bg-green-100 text-green-700 p-4 rounded-lg mb-6">
                             {message}
                         </div>
-                    )}
+                    )} */}
 
                     {data && (
                         <>
@@ -311,34 +311,15 @@ function UpgradeInstance() {
                                                         <span className="font-semibold">
                                                             Prix :
                                                         </span>{" "}
-                                                        {item.offer.price} €
+                                                        {Number(item.offer.price).toFixed(2)} € / mois
                                                     </p>
 
                                                 </div>
 
-                                                <button
-                                                    onClick={() =>
-                                                        handleUpgrade(
-                                                            item.application_offer_id
-                                                        )
-                                                    }
-                                                    disabled={upgrading}
-                                                    className="
-                                                        w-full
-                                                        bg-blue-600
-                                                        text-white
-                                                        py-3
-                                                        rounded-lg
-                                                        font-semibold
-                                                        hover:bg-blue-700
-                                                        disabled:bg-gray-400
-                                                    "
-                                                >
-                                                    {upgrading
-                                                        ? "Modification..."
-                                                        : `Choisir ${item.offer.name}`
-                                                    }
-                                                </button>
+                                                <UpgradePayPalButton
+                                                    instanceId={data.instance.id}
+                                                    applicationOfferId={item.application_offer_id}
+                                                />
 
                                             </div>
 

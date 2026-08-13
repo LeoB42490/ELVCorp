@@ -12,7 +12,10 @@ class Order extends Model
         'amount',
         'status',
         'paypal_order_id',
-        'paypal_capture_id'
+        'paypal_capture_id',
+        'type',
+        'instance_id',
+        'source_application_offer_id'
     ];
 
     public function user()
