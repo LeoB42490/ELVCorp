@@ -28,6 +28,7 @@ function Offers() {
     const [offers, setOffers] = useState<Offer[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
+    const [instanceNames, setInstanceNames] = useState<{ [key: number]: string }>({});
 
     useEffect(() => {
         fetch(`${API_URL}/api/applications/${id}/offers`)
@@ -68,6 +69,17 @@ function Offers() {
             </div>
         );
     }
+    //Empêche "Mon Wordpress !!!"
+    const handleInstanceNameChange = (offerId: number, value: string) => {
+    const sanitizedValue = value
+        .toLowerCase()
+        .replace(/[^a-z0-9-]/g, "");
+
+        setInstanceNames((prev) => ({
+            ...prev,
+            [offerId]: sanitizedValue,
+        }));
+    };
 
     return (
 
@@ -122,8 +134,27 @@ function Offers() {
                                         </ul>
                                     </div>
 
-                                    
-                                    <PayPalButton applicationId={Number(id)} offerId={offer.id} />
+                                    <div className="mb-4">
+                                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                                            Nom de votre instance
+                                        </label>
+
+                                        <input
+                                            type="text"
+                                            value={instanceNames[offer.id] || ""}
+                                            onChange={(e) =>
+                                                handleInstanceNameChange(offer.id, e.target.value)
+                                            }
+                                            placeholder={`ex: ${application?.name.toLowerCase()}-Dupond`}
+                                            maxLength={30}
+                                            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        />
+
+                                        <p className="text-xs text-gray-500 mt-1">
+                                            Lettres minuscules, chiffres et tirets uniquement.
+                                        </p>
+                                    </div>
+                                    <PayPalButton applicationId={Number(id)} offerId={offer.id} instanceName={instanceNames[offer.id] || ""} />
                                 </div>
                             ))}
                         </div>

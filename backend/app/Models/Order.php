@@ -15,7 +15,8 @@ class Order extends Model
         'paypal_capture_id',
         'type',
         'instance_id',
-        'source_application_offer_id'
+        'source_application_offer_id',
+        'instance_name',
     ];
 
     public function user()

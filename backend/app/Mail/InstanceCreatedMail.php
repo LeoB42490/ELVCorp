@@ -63,9 +63,9 @@ class InstanceCreatedMail extends Mailable
             : $ipAddress;
 
         if ($port !== null) {
-            return "http://{$formattedAddress}:{$port}";
+            return "https://{$formattedAddress}:{$port}";
         }
 
-        return "http://{$formattedAddress}";
+        return "https://{$formattedAddress}";
     }
 }

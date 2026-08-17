@@ -24,7 +24,7 @@ class ProxmoxDeployService
     	$memory = $offer->ram_mb;
     	$storage = $offer->storage_gb;
 
-    	$hostname = Str::slug($applicationName) . '-' . $instance->user_id;
+    	$hostname = Str::slug($instance->name);
     	$host = env('PROXMOX_HOST');
 
     	$scripts = [

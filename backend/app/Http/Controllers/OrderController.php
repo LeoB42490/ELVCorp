@@ -17,6 +17,20 @@ class OrderController extends Controller
         $request->validate([
             'application_id' => 'required|exists:applications,id',
             'offer_id' => 'required|exists:offers,id',
+            'instance_name' => [
+                'required',
+                'string',
+                'min:3',
+                'max:30',
+                'regex:/^[a-z0-9]+(?:-[a-z0-9]+)*$/',
+                'unique:instances,name',
+            ],
+        ], [
+            'instance_name.required' => 'Le nom de l’instance est obligatoire.',
+            'instance_name.min' => 'Le nom doit contenir au moins 3 caractères.',
+            'instance_name.max' => 'Le nom ne peut pas dépasser 30 caractères.',
+            'instance_name.regex' => 'Le nom peut contenir uniquement des lettres minuscules, des chiffres et des tirets.',
+            'instance_name.unique' => 'Ce nom d’instance est déjà utilisé.',
         ]);
 
         $applicationOffer = ApplicationOffer::with(['offer', 'application'])
@@ -26,10 +40,10 @@ class OrderController extends Controller
 
         $amount = $applicationOffer->offer->price;
 
-        $applicationName = $applicationOffer->application->name;
         $order = Order::create([
             'user_id' => $request->user()->id,
             'application_offer_id' => $applicationOffer->id,
+            'instance_name' => $request->instance_name,
             'amount' => $amount,
             'status' => 'pending',
         ]);
@@ -68,13 +82,10 @@ class OrderController extends Controller
                 'paypal_capture_id' => $captureId,
             ]);
 
-            $applicationOffer = ApplicationOffer::with('application')
-                ->findOrFail($order->application_offer_id);
-
             $instance = Instance::create([
                 'user_id' => $order->user_id,
                 'application_offer_id' => $order->application_offer_id,
-                'name' => $applicationOffer->application->name,
+                'name' => $order->instance_name,
                 'status' => 'provisioning',
             ]);
 
