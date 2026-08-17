@@ -113,6 +113,8 @@ Route::middleware('auth:sanctum')->post('/logout', function (Request $request) {
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/orders', [OrderController::class, 'create']);
     Route::post('/orders/{order}/capture', [OrderController::class, 'capture']);
+    Route::post('/upgrade-orders', [OrderController::class, 'createUpgrade']);
+    Route::post('/upgrade-orders/{order}/capture', [OrderController::class, 'captureUpgrade']);
 });
 
 Route::middleware('auth:sanctum')->get(
@@ -136,3 +138,17 @@ Route::post(
     '/reset-password',
     [PasswordResetController::class, 'resetPassword']
 );
+
+Route::middleware('auth:sanctum')->group(function () {
+
+    Route::get(
+        '/instances/{id}/upgrades',
+        [InstanceController::class, 'availableUpgrades']
+    );
+    //TODO Route a supprimer apres test Paypal
+    Route::post(
+        '/instances/{id}/upgrade',
+        [InstanceController::class, 'upgrade']
+    );
+
+});

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { API_URL } from "../api";
@@ -14,6 +15,7 @@ type Instance = {
 };
 
 function Instances() {
+    const navigate = useNavigate();
     const [instances, setInstances] = useState<Instance[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
@@ -110,13 +112,15 @@ function Instances() {
                                     key={instance.id}
                                     className="relative bg-white rounded-2xl shadow-md p-6"
                                 >
-                                    <button
-                                        onClick={() => handleDelete(instance.id)}
-                                        className="absolute top-4 right-4 text-red-500 hover:text-red-700 text-xl"
-                                        title="Supprimer l'instance"
-                                    >
-                                        🗑️ 
-                                    </button>
+                                    {instance.status === "running" && (
+                                        <button
+                                            onClick={() => handleDelete(instance.id)}
+                                            className="absolute top-4 right-4 text-red-500 hover:text-red-700 text-xl"
+                                            title="Supprimer l'instance"
+                                        >
+                                            🗑️ 
+                                        </button>
+                                    )}
                                     <h2 className="text-2xl font-bold text-gray-900 mb-4">
                                         {instance.name}
                                     </h2>
@@ -140,6 +144,29 @@ function Instances() {
                                         Créée le{" "}
                                         {new Date(instance.created_at).toLocaleDateString("fr-FR")}
                                     </p>
+
+                                    {instance.status === "running" && (
+                                        <button
+                                            onClick={() =>
+                                                navigate(`/instances/${instance.id}/upgrade`)
+                                            }
+                                            className="mt-6 w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-lg transition"
+                                        >
+                                            Passer au plan supérieur
+                                        </button>
+                                    )}
+
+                                    {instance.status === "upgrading" && (
+                                        <div className="mt-6 w-full bg-orange-100 text-orange-700 font-semibold py-3 px-4 rounded-lg text-center">
+                                            Modification en cours...
+                                        </div>
+                                    )}
+
+                                    {instance.status === "deleting" && (
+                                        <div className="mt-6 w-full bg-red-100 text-red-700 font-semibold py-3 px-4 rounded-lg text-center">
+                                            Suppression en cours...
+                                        </div>
+                                    )}
                                 </div>
                             ))}
                         </div>
