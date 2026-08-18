@@ -62,10 +62,10 @@ class InstanceCreatedMail extends Mailable
             ? '[' . trim($ipAddress, '[]') . ']'
             : $ipAddress;
 
-        if ($port !== null) {
-            return "https://{$formattedAddress}:{$port}";
+        if ($port === 80 || $port !== null) {
+            return "https://{$formattedAddress}";
         }
 
-        return "https://{$formattedAddress}";
+        return "https://{$formattedAddress}:{$port}";
     }
 }
