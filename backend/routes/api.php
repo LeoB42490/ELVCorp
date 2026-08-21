@@ -108,6 +108,34 @@ Route::middleware('auth:sanctum')->put('/me', function (Request $request) {
     ]);
 });
 
+Route::delete('/me', function (Request $request) {
+    $user = $request->user();
+
+    if (!$user) {
+        return response()->json([
+            'message' => 'Utilisateur introuvable.'
+        ], 404);
+    }
+
+    if ($user->instances()->exists()) {
+        return response()->json([
+            'message' => 'Vous devez supprimer toutes vos instances avant de pouvoir supprimer votre compte.'
+        ], 409);
+    }
+
+    // Supprime les tokens Sanctum
+    $user->tokens()->delete();
+
+    // Supprime le compte
+    $user->delete();
+
+    return response()->json([
+        'success' => true,
+        'message' => 'Compte supprimé avec succès.'
+    ]);
+})->middleware('auth:sanctum');
+
+
 Route::middleware('auth:sanctum')->post('/logout', function (Request $request) {
     $request->user()->currentAccessToken()->delete();
 

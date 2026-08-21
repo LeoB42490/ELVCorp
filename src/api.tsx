@@ -103,33 +103,6 @@ export async function forgotPassword(data: {
     return result;
 }
 
-// export async function resetPassword(data: {
-//     email: string;
-//     token: string;
-//     password: string;
-//     password_confirmation: string;
-// }) {
-//     const response = await fetch(`${API_URL}/api/reset-password`, {
-//         method: "POST",
-//         headers: {
-//             "Content-Type": "application/json",
-//             "Accept": "application/json",
-//         },
-//         body: JSON.stringify(data),
-//     });
-
-//     const result = await response.json();
-
-//     if (!response.ok) {
-//         throw {
-//             status: response.status,
-//             data: result,
-//         };
-//     }
-
-//     return result;
-// }
-
 export async function resetPassword(data: {
     email: string;
     token: string;
@@ -214,4 +187,18 @@ export async function upgradeInstance(
     }
 
     return data;
+}
+
+export async function deleteMe() {
+    const token = localStorage.getItem("token");
+
+    const response = await fetch(`${API_URL}/api/me`, {
+        method: "DELETE",
+        headers: {
+            "Accept": "application/json",
+            "Authorization": `Bearer ${token}`,
+        },
+    });
+
+    return response.json();
 }

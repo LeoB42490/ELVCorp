@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
-import { getMe, updateMe } from "../api";
+import { getMe, updateMe, deleteMe } from "../api";
 import Footer from "../components/Footer";
 
 type User = {
@@ -20,6 +20,7 @@ function Profil() {
         prenom: "",
         email: "",
     });
+    const [deleting, setDeleting] = useState(false);
 
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
@@ -94,6 +95,38 @@ function Profil() {
         }
     }
 
+
+    async function handleDeleteAccount() {
+        const confirmed = window.confirm(
+            "Voulez-vous vraiment supprimer votre compte ? Cette action est irréversible."
+        );
+
+        if (!confirmed) {
+            return;
+        }
+
+        setDeleting(true);
+        setError("");
+        setSuccess("");
+
+        try {
+            const data = await deleteMe();
+
+            if (!data.success) {
+                setError(data.message || "Impossible de supprimer le compte.");
+                return;
+            }
+
+            localStorage.removeItem("token");
+
+            navigate("/");
+        } catch {
+            setError("Impossible de supprimer le compte.");
+        } finally {
+            setDeleting(false);
+        }
+    }
+
     return (
         <>
             <Navbar />
@@ -139,7 +172,7 @@ function Profil() {
                             )}
 
                             {!loading && user && (
-                                <form onSubmit={handleSubmit} className="space-y-6">
+                                <><form onSubmit={handleSubmit} className="space-y-6">
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                         <div>
                                             <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -151,8 +184,7 @@ function Profil() {
                                                 value={form.nom}
                                                 onChange={handleChange}
                                                 className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                                required
-                                            />
+                                                required />
                                         </div>
 
                                         <div>
@@ -165,8 +197,7 @@ function Profil() {
                                                 value={form.prenom}
                                                 onChange={handleChange}
                                                 className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                                required
-                                            />
+                                                required />
                                         </div>
                                     </div>
 
@@ -180,8 +211,7 @@ function Profil() {
                                             value={form.email}
                                             onChange={handleChange}
                                             className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                            required
-                                        />
+                                            required />
                                     </div>
 
                                     <div className="flex justify-end gap-3 pt-4">
@@ -202,6 +232,23 @@ function Profil() {
                                         </button>
                                     </div>
                                 </form>
+                                <div className="mt-10 pt-8 border-t border-red-200">
+                                    <h2 className="text-xl font-bold text-red-700 mb-2">
+                                        Supprimer mon compte
+                                    </h2>
+                                    <p className="text-sm text-gray-600 mb-4">
+                                        La suppression de votre compte est définitive. Vous devez supprimer toutes vos instances avant de pouvoir continuer.
+                                    </p>
+                                    <button
+                                        type="button"
+                                        onClick={handleDeleteAccount}
+                                        disabled={deleting}
+                                        className="px-6 py-3 rounded-lg bg-red-600 text-white font-medium hover:bg-red-700 transition disabled:opacity-50"
+                                    >
+                                        {deleting ? "Suppression..." : "Supprimer mon compte"}
+                                    </button>
+                                </div>
+                            </>
                             )}
                         </div>
                     </div>
