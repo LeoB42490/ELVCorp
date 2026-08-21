@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 function Footer() {
 
     return (
@@ -7,7 +9,7 @@ function Footer() {
                     <p className="text-sm text-gray-600">© 2026 HostBuster. Tous droits réservés.</p>
                     <div className="flex gap-6 text-sm text-gray-600">
                         {/* @TODO Modifier les lien href */}
-                        <a href="#" className="hover:text-blue-600 transition">Contact</a>
+                        <Link to="/support" className="hover:text-blue-600 transition"> Contact </Link>
                     </div>
                 </div>
             </div>
