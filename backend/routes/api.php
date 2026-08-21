@@ -23,7 +23,12 @@ Route::post('/register', function (Request $request) {
     'nom' => 'required|string|max:255',
     'prenom' => 'required|string|max:255',
     'email' => 'required|email|unique:users,email',
-    'password' => 'required|string|min:6',
+    'password' => [
+        'required',
+        'string',
+        'min:8',
+        'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/',
+    ],
     ], [
         'nom.required' => 'Le nom est obligatoire.',
         'prenom.required' => 'Le prénom est obligatoire.',
@@ -31,7 +36,8 @@ Route::post('/register', function (Request $request) {
         'email.email' => 'L’adresse e-mail n’est pas valide.',
         'email.unique' => 'Cette adresse e-mail est déjà utilisée.',
         'password.required' => 'Le mot de passe est obligatoire.',
-        'password.min' => 'Le mot de passe doit contenir au moins 6 caractères.',
+        'password.min' => 'Le mot de passe doit contenir au moins 8 caractères.',
+        'password.regex' => 'Le mot de passe doit contenir au moins une majuscule, une minuscule, un chiffre et un caractère spécial.',
     ]);
 
     if ($validator->fails()) {

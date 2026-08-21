@@ -12,11 +12,20 @@ function Inscription() {
     const [confirmPassword, setConfirmPassword] = useState("");
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
     async function handleRegister(e: React.FormEvent) {
         e.preventDefault();
         setError("");
         setLoading(true);
+
+        if (!passwordRegex.test(password)) {
+            setError(
+                "Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial."
+            );
+            setLoading(false);
+            return;
+        }
 
         if (password !== confirmPassword) {
             setError("Les mots de passe ne correspondent pas");
@@ -128,10 +137,11 @@ function Inscription() {
                                 placeholder="••••••••"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
+                                minLength={8}
                                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition"
                                 required
                             />
-                            <p className="text-xs text-gray-500 mt-1">Au minimum 6 caractères</p>
+                            <p className="text-xs text-gray-500 mt-1">8 caractères minimum, avec une majuscule, une minuscule, un chiffre et un caractère spécial.</p>
                         </div>
 
                         {/* <!-- Confirm Password --> */}
