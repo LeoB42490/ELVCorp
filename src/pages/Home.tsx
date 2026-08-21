@@ -44,7 +44,7 @@ function Home() {
                                     Lancez votre application <br className="hidden md:block" />dès maintenant
                                 </h1>
                                 <p className="text-gray-600 text-lg mb-8">
-                                    Déployez WordPress, Odoo, GLPi ou Minecraft en moins de 3 minutes.
+                                    Déployez WordPress, Odoo, GLPI ou Minecraft en moins de 3 minutes.
                                 </p>
                                 <div className="flex flex-col sm:flex-row gap-4">
                                     <Link to="/#offres" className="bg-green-500 hover:bg-green-600 text-white font-semibold py-3 px-8 rounded-lg transition block text-center">
@@ -129,7 +129,7 @@ function Home() {
                                         </li>
                                     </ul>
                                     <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg transition" onClick={() => navigate("/offers/4")}>
-                                        À partir 4,99€/mois
+                                        À partir de 4,99€/mois
                                     </button>
                                 </div>
                             </div>
@@ -153,7 +153,7 @@ function Home() {
                                         </li>
                                     </ul>
                                     <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg transition" onClick={() => navigate("/offers/2")}>
-                                        À partir 4,99€/mois
+                                        À partir de 4,99€/mois
                                     </button>
                                 </div>
                             </div>
@@ -177,7 +177,7 @@ function Home() {
                                         </li>
                                     </ul>
                                     <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg transition" onClick={() => navigate("/offers/3")}>
-                                        À partir 4,99€/mois
+                                        À partir de 4,99€/mois
                                     </button>
                                 </div>
                             </div>
@@ -191,7 +191,7 @@ function Home() {
                                     </div>
                                 </div>
                                 <div className="p-6">
-                                    <h3 className="font-bold text-lg text-gray-900 mb-2">Créer serveur de jeu</h3>
+                                    <h3 className="font-bold text-lg text-gray-900 mb-2">Créer un serveur de jeu</h3>
                                     <ul className="text-sm text-gray-600 space-y-2 mb-6">
                                         <li className="flex items-center gap-2">
                                             <span className="text-green-500">✓</span> Paramètres personnalisés
@@ -201,7 +201,7 @@ function Home() {
                                         </li>
                                     </ul>
                                     <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg transition" onClick={() => navigate("/offers/1")}>
-                                        À partir 9,99€/mois
+                                        À partir de 9,99€/mois
                                     </button>
                                 </div>
                             </div>
@@ -227,7 +227,7 @@ function Home() {
                                 <div className="text-2xl">👁️</div>
                                 <div>
                                     <h3 className="font-bold text-gray-900 mb-2">Supervision 24/7</h3>
-                                    <p className="text-sm text-gray-600">Monitrage continu de vos applications et services</p>
+                                    <p className="text-sm text-gray-600">Monitorage continu de vos applications et services</p>
                                 </div>
                             </div>
 
