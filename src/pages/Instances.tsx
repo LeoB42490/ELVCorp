@@ -20,31 +20,57 @@ function Instances() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
 
-    useEffect(() => {
+    const fetchInstances = async (showLoading = false) => {
         const token = localStorage.getItem("token");
 
-        fetch(`${API_URL}/api/instances`, {
-            headers: {
-                "Accept": "application/json",
-                "Authorization": `Bearer ${token}`,
-            },
-        })
-            .then((res) => {
-                if (!res.ok) {
-                    throw new Error();
-                }
-                return res.json();
-            })
-            .then((data) => {
-                setInstances(data);
-            })
-            .catch(() => {
-                setError("Impossible de charger vos instances.");
-            })
-            .finally(() => {
-                setLoading(false);
+        if (showLoading) {
+            setLoading(true);
+        }
+
+        try {
+            const res = await fetch(`${API_URL}/api/instances`, {
+                headers: {
+                    "Accept": "application/json",
+                    "Authorization": `Bearer ${token}`,
+                },
             });
+
+            if (!res.ok) {
+                throw new Error();
+            }
+
+            const data = await res.json();
+
+            setInstances(data);
+            setError("");
+        } catch {
+            setError("Impossible de charger vos instances.");
+        } finally {
+            if (showLoading) {
+                setLoading(false);
+            }
+        }
+    };
+
+    useEffect(() => {
+        fetchInstances(true);
     }, []);
+
+    useEffect(() => {
+        const hasPendingInstance = instances.some((instance) =>
+            ["provisioning", "upgrading", "deleting"].includes(instance.status)
+        );
+
+        if (!hasPendingInstance) {
+            return;
+        }
+
+        const interval = setInterval(() => {
+            fetchInstances();
+        }, 30000);
+
+        return () => clearInterval(interval);
+    }, [instances]);
 
     function handleDelete(instanceId: number) {
         const confirmDelete = window.confirm(
@@ -77,6 +103,28 @@ function Instances() {
             .catch(() => {
                 alert("Impossible de supprimer cette instance.");
             });
+    }
+
+    function getStatusLabel(status: string) {
+        switch (status) {
+            case "running":
+                return "En fonctionnement";
+
+            case "provisioning":
+                return "Création en cours";
+
+            case "upgrading":
+                return "Modification en cours";
+
+            case "deleting":
+                return "Suppression en cours";
+
+            case "error":
+                return "Erreur";
+
+            default:
+                return status;
+        }
     }
 
     return (
@@ -127,7 +175,7 @@ function Instances() {
 
                                     <p>
                                         <span className="font-semibold">Statut :</span>{" "}
-                                        {instance.status}
+                                        {getStatusLabel(instance.status)}
                                     </p>
 
                                     <p>
@@ -154,6 +202,18 @@ function Instances() {
                                         >
                                             Passer au plan supérieur
                                         </button>
+                                    )}
+
+                                    {instance.status === "upgrading" && (
+                                        <div className="mt-6 w-full bg-orange-100 text-orange-700 font-semibold py-3 px-4 rounded-lg text-center">
+                                            Modification en cours...
+                                        </div>
+                                    )}
+
+                                    {instance.status === "provisioning" && (
+                                        <div className="mt-6 w-full bg-blue-100 text-blue-700 font-semibold py-3 px-4 rounded-lg text-center">
+                                            Création en cours...
+                                        </div>
                                     )}
 
                                     {instance.status === "upgrading" && (
