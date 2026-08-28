@@ -7,10 +7,11 @@ type PayPalButtonProps = {
     applicationId: number;
     offerId: number;
     instanceName: string;
+    acceptedCGV: boolean;
     onSuccess?: () => void;
 };
 //, onSuccess
-function PayPalButton({ applicationId, offerId, instanceName}: PayPalButtonProps) {
+function PayPalButton({ applicationId, offerId, instanceName, acceptedCGV}: PayPalButtonProps) {
     const token = localStorage.getItem("token");
     const localOrderId = useRef<number | null>(null);
     const navigate = useNavigate();
@@ -27,6 +28,11 @@ function PayPalButton({ applicationId, offerId, instanceName}: PayPalButtonProps
             <PayPalButtons
                 createOrder={async () => {
                     setError("");
+
+                    if (!acceptedCGV) {
+                        setError("Vous devez accepter les Conditions Générales de Vente avant de procéder au paiement.");
+                        throw new Error("CGV non acceptées");
+                    }
 
                     if (!instanceName.trim()) {
                         setError("Veuillez renseigner un nom pour votre instance.");

@@ -29,6 +29,7 @@ function Offers() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
     const [instanceNames, setInstanceNames] = useState<{ [key: number]: string }>({});
+    const [acceptedCGV, setAcceptedCGV] = useState<{ [key: number]: boolean }>({});
 
     useEffect(() => {
         fetch(`${API_URL}/api/applications/${id}/offers`)
@@ -154,7 +155,38 @@ function Offers() {
                                             Lettres minuscules, chiffres et tirets uniquement.
                                         </p>
                                     </div>
-                                    <PayPalButton applicationId={Number(id)} offerId={offer.id} instanceName={instanceNames[offer.id] || ""} />
+
+                                    <div className="mb-4 flex items-start gap-2">
+                                        <input
+                                            type="checkbox"
+                                            id={`cgv-${offer.id}`}
+                                            checked={acceptedCGV[offer.id] || false}
+                                            onChange={(e) =>
+                                                setAcceptedCGV((prev) => ({
+                                                    ...prev,
+                                                    [offer.id]: e.target.checked,
+                                                }))
+                                            }
+                                            className="mt-1"
+                                        />
+
+                                        <label
+                                            htmlFor={`cgv-${offer.id}`}
+                                            className="text-sm text-gray-600"
+                                        >
+                                            J’ai lu et j’accepte les{" "}
+                                            <button
+                                                type="button"
+                                                onClick={() => navigate("/cgv")}
+                                                className="text-blue-600 hover:underline"
+                                            >
+                                                Conditions Générales de Vente
+                                            </button>
+                                            .
+                                        </label>
+                                    </div> 
+
+                                    <PayPalButton applicationId={Number(id)} offerId={offer.id} instanceName={instanceNames[offer.id] || ""} acceptedCGV={acceptedCGV[offer.id] || false} />
                                 </div>
                             ))}
                         </div>

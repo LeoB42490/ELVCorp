@@ -10,6 +10,9 @@ import Faq from "./pages/Faq";
 import Instances from "./pages/Instances";
 import ReinitialiserMotDePasse from "./pages/ReinitialiserMotDePasse";
 import UpgradeInstance from "./pages/UpgradeInstance";
+import CGV from "./pages/CGV";
+import CGU from "./pages/CGU";
+import MentionsLegales from "./pages/MentionsLegales";
 
 function App() {
     return (
@@ -26,6 +29,9 @@ function App() {
                 <Route path="/instances" element={<Instances />} />
                 <Route path="/reset-password" element={<ReinitialiserMotDePasse />} />
                 <Route path="/instances/:id/upgrade" element={<UpgradeInstance/>} />
+                <Route path="/cgu" element={<CGU />} />
+                <Route path="/cgv" element={<CGV />} />
+                <Route path="/mentions-legales" element={<MentionsLegales />} />
             </Routes>
         </BrowserRouter>
     );

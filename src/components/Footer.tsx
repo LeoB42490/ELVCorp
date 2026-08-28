@@ -10,6 +10,9 @@ function Footer() {
                     <div className="flex gap-6 text-sm text-gray-600">
                         {/* @TODO Modifier les lien href */}
                         <Link to="/support" className="hover:text-blue-600 transition"> Contact </Link>
+                        <Link to="/cgu" className="hover:text-blue-600 transition"> CGU </Link>
+                        <Link to="/cgv" className="hover:text-blue-600 transition"> CGV </Link>
+                        <Link to="/mentions-legales" className="hover:text-blue-600 transition"> Mentions légales </Link>
                     </div>
                 </div>
             </div>
