@@ -41,7 +41,7 @@ class ProxmoxDeployService
     	$script = $scripts[$application];
 
     	$command = sprintf( //TODO modifier le /home/ && installer supervisor et mettre le fichier avec bon user et bon chemin du backend
-        	'ssh -i /home/leo/.ssh/id_ed25519 -o StrictHostKeyChecking=no -o ConnectTimeout=120 script0@%s "bash %s %s %s %s %s" 2>&1',
+        	'ssh -i /home/user0/.ssh/id_ed25519 -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -o ConnectTimeout=120 script0@%s "bash %s %s %s %s %s" 2>&1',
         	escapeshellarg($host),
         	escapeshellarg($script),
         	escapeshellarg($cpu),
@@ -90,7 +90,7 @@ class ProxmoxDeployService
         }
 
         $command = sprintf( //TODO modifier le /home/ && installer supervisor et mettre le fichier avec bon user et bon chemin du backend
-        	'ssh -i /home/leo/.ssh/id_ed25519 -o StrictHostKeyChecking=no -o ConnectTimeout=120 script0@%s "bash suppr_container %s" 2>&1',
+        	'ssh -i /home/user0/.ssh/id_ed25519 -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -o ConnectTimeout=120 script0@%s "bash suppr_container %s" 2>&1',
             escapeshellarg($host),
             escapeshellarg($vmid)
         );
@@ -205,7 +205,7 @@ class ProxmoxDeployService
         $script = '/home/script0/upgrade_instance.bash';
 
         $command = sprintf(
-            'ssh -i /home/leo/.ssh/id_ed25519 -o StrictHostKeyChecking=no -o ConnectTimeout=120 script0@%s "sudo %s %s %s %s %s" 2>&1',
+            'ssh -i /home/user0/.ssh/id_ed25519 -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -o ConnectTimeout=120 script0@%s "sudo %s %s %s %s %s" 2>&1',
             escapeshellarg($host),
             escapeshellarg($script),
             escapeshellarg($vmid),
