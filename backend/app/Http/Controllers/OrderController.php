@@ -87,6 +87,7 @@ class OrderController extends Controller
                 'application_offer_id' => $order->application_offer_id,
                 'name' => $order->instance_name,
                 'status' => 'provisioning',
+                'expires_at' => now()->addDays(config('instances.default_ttl_days')),
             ]);
 
             //app(\App\Services\ProxmoxDeployService::class)->deployMinecraft($instance);

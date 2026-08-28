@@ -14,6 +14,11 @@ class Instance extends Model
         'ip_address',
         'port',
         'proxmox_ctid',
+        'expires_at',
+    ];
+
+    protected $casts = [
+        'expires_at' => 'datetime',
     ];
 
     public function user()
